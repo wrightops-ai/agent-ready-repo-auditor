@@ -42,7 +42,7 @@ body:
     id: paid_interest
     attributes:
       label: Fixed-price remediation interest
-      description: If this audit finds gaps, would you consider a human-reviewed fixed-price remediation package? This is non-binding research, not an offer or contract.
+      description: If this audit finds gaps, would you consider a $149 human-reviewed Fix Plan with exactly three public fix cards? This is non-binding research, not an offer or contract.
       options:
         - Yes
         - Maybe

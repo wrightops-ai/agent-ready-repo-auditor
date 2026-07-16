@@ -450,8 +450,9 @@ class IssueFulfillmentTests(unittest.TestCase):
         self.assertIn("automatically generated", comment)
         self.assertIn("not a vulnerability or security assessment", comment)
         self.assertIn("Evidence score: **100/100", comment)
-        self.assertIn("human-reviewed remediation proposal", comment)
-        self.assertIn("proposal requested", comment)
+        self.assertIn("$149 Agent-Ready Repo Fix Plan", comment)
+        self.assertIn("buyer-specific PayPal goods/services invoice", comment)
+        self.assertIn("Do not post payment details here", comment)
 
 
 class RepositoryWorkflowTests(unittest.TestCase):

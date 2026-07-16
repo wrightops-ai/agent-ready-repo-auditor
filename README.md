@@ -9,7 +9,7 @@
 
 Agent-Ready Repo Auditor is a dependency-free Python CLI, library, and GitHub Action for repositories used with **Codex, Claude Code, GitHub Copilot coding agent, Cursor, or mixed-agent workflows**. It reads one immutable public default-branch snapshot and emits deterministic JSON or Markdown with source links for every positive finding.
 
-[Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [See the immutable v1 sample report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
+[Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Get a $149 human-reviewed Fix Plan](docs/agent-ready-fix-plan.md) · [See the immutable v1 sample report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
 
 It never clones or executes repository code. It is not a vulnerability scanner, security assessment, compliance review, or proof that documentation is accurate.
 
@@ -40,7 +40,9 @@ jobs:
 
 The action writes `agent-ready-audit.md`, adds the evidence report to the workflow summary, and exposes `score`, `band`, `report-path`, and immutable `revision` outputs. Its token is used only for bounded read requests to `api.github.com`; private repositories still fail closed.
 
-Want to see the output before installing it? [Request one free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml). Requests and reports are public. The form's remediation-interest question is non-binding demand research; this repository does not accept payment or create a service contract.
+Want to see the output before installing it? [Request one free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml). Requests and reports are public. The form's remediation-interest question is non-binding demand research; opening an issue does not create a service contract.
+
+Need exact next steps after the report? The [$149 Agent-Ready Repo Fix Plan](docs/agent-ready-fix-plan.md) adds exactly three human-reviewed fix cards to the public audit issue within one business day. Scope is confirmed before a buyer-specific PayPal goods/services invoice is issued.
 
 For a concrete example, read the [sample report for the immutable `v1` release](docs/sample-report-v1.md), generated from public evidence at revision `7a507bc0cb42f8c04fb18e53a46371b37b5bd56f`.
 
@@ -124,6 +126,8 @@ python3 -m agent_ready_repo_auditor wrightops-ai/website --format json
 ## Commercial delivery boundary
 
 This repository is suitable as the deterministic evidence engine for a human-reviewed readiness audit. A responsible paid delivery should state the scanned revision, manually verify the generated findings, add repository-specific priorities, and preserve the report's limitations. Do not market it as a security audit or promise operational outcomes that were not measured.
+
+The fixed-price entry offer is the [$149 Agent-Ready Repo Fix Plan](docs/agent-ready-fix-plan.md). It covers one public repository and exactly three human-reviewed fix cards, delivered publicly on the completed audit issue. It does not include implementation. Payment details remain private, and payment is requested only after the public issue and scope are matched.
 
 ## License
 

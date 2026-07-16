@@ -53,7 +53,7 @@ def has_commercial_interest(body: str) -> bool:
 
 
 def build_comment(report: AuditReport) -> str:
-    """Render a transparent, non-commercial automated fulfillment comment."""
+    """Render transparent automated fulfillment with an optional paid next step."""
 
     return (
         "> This report was automatically generated from one immutable public GitHub "
@@ -63,12 +63,16 @@ def build_comment(report: AuditReport) -> str:
         "### Put the report to work\n\n"
         "Install the [free GitHub Action](https://github.com/wrightops-ai/"
         "agent-ready-repo-auditor#github-action) to keep the evidence check running. "
-        "For a human-reviewed remediation proposal, reply `proposal requested` with the "
-        "public gap you want prioritized. That reply is non-binding; scope and payment "
-        "would require a separate written agreement.\n\n"
+        "For exact next steps, the [$149 Agent-Ready Repo Fix Plan](https://github.com/"
+        "wrightops-ai/agent-ready-repo-auditor/blob/main/docs/agent-ready-fix-plan.md) "
+        "adds exactly three human-reviewed fix cards to this public issue within one "
+        "business day. Email `zach@zachwright.xyz` with this issue URL to request a "
+        "scope check and buyer-specific PayPal goods/services invoice. Do not post "
+        "payment details here.\n\n"
         "The issue-form interest question is non-binding demand research. This repository "
-        "does not accept payment or create a service contract. Do not post secrets, private "
-        "repository details, credentials, or personal data.\n"
+        "does not accept payment through an issue or create a service contract merely by "
+        "opening or replying to one. Do not post secrets, private repository details, "
+        "credentials, payment identifiers, or personal data.\n"
     )
 
 
