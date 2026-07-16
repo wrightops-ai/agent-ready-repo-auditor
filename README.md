@@ -46,16 +46,17 @@ Need exact next steps after the report? The [$149 Agent-Ready Repo Fix Plan](doc
 
 Need the two instruction files proposed as an actual contribution? The
 [$249 Founding Agent-Ready Instructions PR](docs/agent-ready-instructions-pr.md)
-adds or updates exactly root `AGENTS.md` and
-`.github/copilot-instructions.md` for one public repository, then delivers one
-ready-to-merge pull request with one revision round. It uses only committed
-public evidence and does not execute repository code. [Request written scope
-confirmation](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=instructions-pr-request.yml);
+adds or updates exactly root `AGENTS.md` plus one selected companion file—root
+`CLAUDE.md` or `.github/copilot-instructions.md`—for one public repository,
+then delivers one ready-to-merge pull request with one revision round. It uses
+only committed public evidence and does not execute repository code. [Request
+written scope confirmation](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=instructions-pr-request.yml);
 the dedicated PayPal Goods & Services checkout is shared privately only after
 scope confirmation. An eligible $149 Fix Plan for the same repository and
 revision can be credited toward the $249 total. [Inspect the merged sample
-PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1) to see the exact
-two-file boundary, evidence notes, hosted checks, and public review surface.
+PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1) to see the
+Copilot companion variant, exact two-file boundary, evidence notes, hosted
+checks, and public review surface.
 
 For a concrete example, read the [sample report for the immutable `v1` release](docs/sample-report-v1.md), generated from public evidence at revision `7a507bc0cb42f8c04fb18e53a46371b37b5bd56f`.
 
@@ -145,15 +146,16 @@ The fixed-price entry offer is the [$149 Agent-Ready Repo Fix Plan](docs/agent-r
 The implementation offer is the
 [$249 Founding Agent-Ready Instructions PR](docs/agent-ready-instructions-pr.md).
 It covers one completed audit, one public repository and immutable revision,
-exactly root `AGENTS.md` plus `.github/copilot-instructions.md`, one
-ready-to-merge pull request, and one revision round. WrightOps uses only
-committed public documentation and workflows and does not execute target
-repository code. Its
+exactly root `AGENTS.md` plus one selected companion file—root `CLAUDE.md` or
+`.github/copilot-instructions.md`—one ready-to-merge pull request, and one
+revision round. WrightOps uses only committed public documentation and
+workflows and does not execute target repository code. Its
 [public request](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=instructions-pr-request.yml)
 records the public inputs and authorization; written scope confirmation comes
 before the dedicated PayPal Goods & Services checkout is shared privately.
 The [merged sample PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1)
-shows the promised two-file contribution on an owned public repository.
+shows the Copilot companion variant of the promised two-file contribution on
+an owned public repository.
 
 ## License
 

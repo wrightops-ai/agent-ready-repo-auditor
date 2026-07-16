@@ -646,6 +646,7 @@ class RepositoryWorkflowTests(unittest.TestCase):
             "audit_issue",
             "repository",
             "revision",
+            "companion_path",
             "public_context",
             "fix_plan_credit",
             "authorization",
@@ -653,7 +654,9 @@ class RepositoryWorkflowTests(unittest.TestCase):
         ):
             self.assertIn(f"id: {field}", template)
         self.assertIn("root `AGENTS.md`", template)
+        self.assertIn("root `CLAUDE.md`", template)
         self.assertIn("`.github/copilot-instructions.md`", template)
+        self.assertIn("one companion path selected above", template)
         self.assertIn("one ready-to-merge pull request, one revision round", template)
         self.assertIn("does not clone or execute repository code", template)
         self.assertIn("does not create a contract or payment obligation", template)
@@ -713,7 +716,10 @@ class RepositoryAssetTests(unittest.TestCase):
         self.assertIn("template=instructions-pr-request.yml", offer)
         self.assertIn("https://github.com/wrightops-ai/bounty-red-flag-card/pull/1", offer)
         self.assertIn("root `AGENTS.md`", offer)
+        self.assertIn("root `CLAUDE.md`", offer)
         self.assertIn("`.github/copilot-instructions.md`", offer)
+        self.assertIn("companion choice is fixed", normalized_offer)
+        self.assertIn("simultaneous delivery of both companion paths", normalized_offer)
         self.assertIn("No other repository file is changed", offer)
         self.assertIn("one ready-to-merge pull request", normalized_offer)
         self.assertIn("one revision round", normalized_offer)

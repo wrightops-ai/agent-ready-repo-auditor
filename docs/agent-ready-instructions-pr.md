@@ -10,17 +10,19 @@ public GitHub repository at one immutable audited revision. The pull request
 adds or updates exactly these two repository paths:
 
 1. root `AGENTS.md`; and
-2. `.github/copilot-instructions.md`.
+2. one companion instruction file selected during written scope confirmation:
+   either root `CLAUDE.md` or `.github/copilot-instructions.md`.
 
-No other repository file is changed. The delivery includes one revision round
-and is due within **one business day** after settled payment and receipt of all
-required public inputs.
+No other repository file is changed. The companion choice is fixed once scope
+is confirmed. The delivery includes one revision round and is due within **one
+business day** after settled payment and receipt of all required public inputs.
 
 [Inspect the merged two-file sample PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1).
 Its diff contains only root `AGENTS.md` and
 `.github/copilot-instructions.md`; the hosted release verification passed
-before merge. The sample demonstrates the deliverable shape, not a guarantee
-that another repository will approve, merge, or benefit from a proposed PR.
+before merge. It demonstrates the Copilot companion variant and the two-file
+delivery shape, not a guarantee that another repository will approve, merge,
+or benefit from a proposed PR.
 
 “Ready to merge” means the proposed contribution is a reviewable pull request
 whose diff is limited to the two named Markdown files and whose description
@@ -57,6 +59,8 @@ with:
 - the completed WrightOps audit issue URL;
 - the same public repository URL;
 - the full 40-character audited default-branch revision;
+- the selected companion path: root `CLAUDE.md` or
+  `.github/copilot-instructions.md`;
 - public, revision-pinned contribution, architecture, build, test, or workflow
   links that should govern the proposed instructions; and
 - confirmation that the requester is authorized to commission and publicly
@@ -66,11 +70,11 @@ Do not submit credentials, private repository information, customer data,
 personal data, contact details, checkout links, or transaction identifiers.
 Opening the request does not create a contract or payment obligation.
 
-WrightOps confirms the accepted repository, revision, two-file scope, delivery
-clock, price, and any eligible credit in writing on the public issue. Only
-after that written scope confirmation is payment requested. The dedicated
-PayPal Goods & Services checkout is shared privately; it is not posted in the
-issue or this repository.
+WrightOps confirms the accepted repository, revision, selected companion path,
+two-file scope, delivery clock, price, and any eligible credit in writing on
+the public issue. Only after that written scope confirmation is payment
+requested. The dedicated PayPal Goods & Services checkout is shared privately;
+it is not posted in the issue or this repository.
 
 ## Fix Plan credit
 
@@ -92,8 +96,8 @@ audited revision, and public inputs. WrightOps may correct factual mistakes,
 clarify wording, or adjust documented priorities within that scope.
 
 A changed repository revision, additional file, new agent integration,
-undocumented procedure, implementation task, or newly supplied private context
-is new scope rather than the included revision.
+different companion path, undocumented procedure, implementation task, or
+newly supplied private context is new scope rather than the included revision.
 
 ## Exclusions
 
@@ -103,6 +107,7 @@ The offer does not include:
 - changes to CI, setup workflows, source code, configuration, tests,
   dependencies, generated files, or any path other than the two named Markdown
   files;
+- simultaneous delivery of both companion paths;
 - MCP server or `.mcp.json` configuration;
 - execution of repository code, commands, builds, tests, workflows,
   containers, or installers;

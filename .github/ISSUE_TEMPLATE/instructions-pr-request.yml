@@ -10,7 +10,7 @@ body:
 
         WrightOps will verify the public inputs and confirm in writing whether the request fits the founding fixed scope. Opening this issue does not create a contract or payment obligation.
 
-        The delivered pull request changes exactly two paths: root `AGENTS.md` and `.github/copilot-instructions.md`. Everything submitted here is public. Do not include credentials, private repository information, customer data, personal data, or payment details.
+        The delivered pull request changes exactly two paths: root `AGENTS.md` and one companion file selected below—either root `CLAUDE.md` or `.github/copilot-instructions.md`. Everything submitted here is public. Do not include credentials, private repository information, customer data, personal data, or payment details.
   - type: input
     id: audit_issue
     attributes:
@@ -33,6 +33,16 @@ body:
       label: Audited immutable revision
       description: Enter the full 40-character default-branch commit SHA named in the completed audit.
       placeholder: 0123456789abcdef0123456789abcdef01234567
+    validations:
+      required: true
+  - type: dropdown
+    id: companion_path
+    attributes:
+      label: Companion instruction file
+      description: Choose the one companion path that will be delivered with root AGENTS.md. This choice becomes fixed when WrightOps confirms scope in writing.
+      options:
+        - Root CLAUDE.md
+        - .github/copilot-instructions.md
     validations:
       required: true
   - type: textarea
@@ -65,7 +75,7 @@ body:
     attributes:
       label: Founding fixed-scope acknowledgement
       options:
-        - label: I understand the $249 offer covers one public repository at one audited revision and exactly two repository paths—root `AGENTS.md` and `.github/copilot-instructions.md`.
+        - label: I understand the $249 offer covers one public repository at one audited revision and exactly two repository paths—root `AGENTS.md` plus the one companion path selected above.
           required: true
         - label: I understand delivery is one ready-to-merge pull request, one revision round, and no guarantee that the repository owner will approve or merge it.
           required: true
