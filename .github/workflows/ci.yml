@@ -22,3 +22,29 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m unittest discover -v
       - run: python -m py_compile agent_ready_repo_auditor/*.py scripts/*.py tests/*.py action_entrypoint.py
+
+  consumer:
+    name: Local action consumer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: local-audit
+        uses: ./
+        with:
+          repository: wrightops-ai/agent-ready-repo-auditor
+          format: json
+          output-file: consumer-audit.json
+          fail-threshold: "80"
+      - name: Assert action outputs and report
+        env:
+          SCORE: ${{ steps.local-audit.outputs.score }}
+          BAND: ${{ steps.local-audit.outputs.band }}
+          REPORT_PATH: ${{ steps.local-audit.outputs.report-path }}
+          REVISION: ${{ steps.local-audit.outputs.revision }}
+        run: |
+          test "$SCORE" -ge 80
+          test "$BAND" = well_evidenced
+          test "$REPORT_PATH" = consumer-audit.json
+          test -f "$REPORT_PATH"
+          [[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]
+          python3 -c 'import json, os; report = json.load(open(os.environ["REPORT_PATH"], encoding="utf-8")); assert str(report["score"]["percentage"]) == os.environ["SCORE"]; assert report["score"]["band"] == os.environ["BAND"]; assert report["repository"]["revision_sha"] == os.environ["REVISION"]'

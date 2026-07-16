@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   audit:
-    if: startsWith(github.event.issue.title, '[Audit request]')
+    if: startsWith(github.event.issue.title, '[Audit request]') && contains(github.event.issue.labels.*.name, 'audit-request')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Prepare bounded audit comment
+        id: prepare
         env:
           AUDIT_REQUEST_COMMENT: ${{ runner.temp }}/audit-comment.md
           GITHUB_TOKEN: ${{ github.token }}
@@ -29,3 +30,11 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           AUDIT_REQUEST_COMMENT: ${{ runner.temp }}/audit-comment.md
         run: gh issue comment "$ISSUE_NUMBER" --body-file "$AUDIT_REQUEST_COMMENT"
+      - name: Record non-binding commercial interest
+        if: steps.prepare.outputs.commercial-interest == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh label create commercial-interest --color D4C5F9 --description "Non-binding interest in human-reviewed remediation" 2>/dev/null || true
+          gh issue edit "$ISSUE_NUMBER" --add-label commercial-interest

@@ -27,6 +27,17 @@ ENV_EXAMPLE_NAMES = (
     "env.example",
     "example.env",
 )
+NO_RUNTIME_ENV_RE = re.compile(
+    r"(?ix)^\s*(?:[-*+]\s+)?(?:\*\*|__)?(?:"
+    r"no\s+(?:runtime\s+)?environment(?:\s+variables?|\s+configuration)\s+"
+    r"(?:is|are)\s+(?:required|needed)|"
+    r"(?:runtime\s+)?environment(?:\s+variables?|\s+configuration)\s+"
+    r"(?:is|are)\s+not\s+(?:required|needed)|"
+    r"(?:this|the)\s+(?:project|package|tool|action|application)\s+"
+    r"(?:does\s+not|doesn't)\s+require\s+(?:any\s+)?(?:runtime\s+)?"
+    r"environment(?:\s+variables?|\s+configuration)"
+    r")(?:\*\*|__)?[.!]?\s*$"
+)
 VERIFY_CONFIG_NAMES = (
     "makefile",
     "justfile",
@@ -97,7 +108,7 @@ def audit_repository(
     checks = (
         _readme_check(snapshot, path_by_lower, text_files),
         _agent_instructions_check(snapshot, path_by_lower, text_files),
-        _environment_check(snapshot, path_by_lower),
+        _environment_check(snapshot, path_by_lower, text_files),
         _ci_check(snapshot, paths),
         _templates_check(snapshot, paths),
         _verification_check(snapshot, paths, text_files),
@@ -191,15 +202,55 @@ def _agent_instructions_check(
     return _result("agent_instructions", "Coding-agent instructions", score, 20, summary, evidence)
 
 
-def _environment_check(snapshot: RepositorySnapshot, path_by_lower: dict[str, str]) -> CheckResult:
+def _environment_check(
+    snapshot: RepositorySnapshot,
+    path_by_lower: dict[str, str],
+    text_files: dict[str, TextFile],
+) -> CheckResult:
     paths = [path_by_lower[name] for name in ENV_EXAMPLE_NAMES if name in path_by_lower]
-    if not paths:
+    if paths:
+        evidence = [
+            _path_evidence(snapshot, path, "Environment example file exists.")
+            for path in paths
+        ]
         return _result(
-            "environment_example", "Environment example", 0, 10,
-            "No recognized root environment example was evidenced.",
+            "environment_example",
+            "Runtime environment configuration",
+            10,
+            10,
+            "A root environment example was found.",
+            evidence,
         )
-    evidence = [_path_evidence(snapshot, path, "Environment example file exists.") for path in paths]
-    return _result("environment_example", "Environment example", 10, 10, "A root environment example was found.", evidence)
+
+    readme_path = next(
+        (path_by_lower[name] for name in README_NAMES if name in path_by_lower),
+        None,
+    )
+    readme = text_files.get(readme_path) if readme_path else None
+    if readme and readme.text is not None:
+        no_configuration_line = _first_line(readme.text, NO_RUNTIME_ENV_RE)
+        if no_configuration_line:
+            return _result(
+                "environment_example",
+                "Runtime environment configuration",
+                10,
+                10,
+                "The README explicitly states that runtime environment configuration is not required.",
+                (
+                    _line_evidence(
+                        readme,
+                        no_configuration_line,
+                        "README explicitly states that no runtime environment configuration is required.",
+                    ),
+                ),
+            )
+    return _result(
+        "environment_example",
+        "Runtime environment configuration",
+        0,
+        10,
+        "Neither a recognized root environment example nor an explicit no-configuration statement was evidenced.",
+    )
 
 
 def _ci_check(snapshot: RepositorySnapshot, paths: tuple[str, ...]) -> CheckResult:
@@ -325,7 +376,7 @@ def _next_step(check_id: str) -> str:
     return {
         "readme_setup": "Add or strengthen a root README with prerequisites and copy-paste setup commands.",
         "agent_instructions": "Add a root AGENTS.md (or another recognized instruction file) with repository-specific coding-agent guidance.",
-        "environment_example": "Add a redacted root .env.example that names required configuration without real secrets.",
+        "environment_example": "If runtime configuration is required, add a redacted root .env.example that names it without real secrets; otherwise state explicitly in the root README that no runtime environment configuration is required.",
         "continuous_integration": "Add a GitHub Actions workflow that runs the repository's documented verification commands.",
         "contribution_templates": "Add both issue and pull-request templates for structured change requests and reviews.",
         "verification": "Document and automate repeatable test, lint, or type-check commands.",

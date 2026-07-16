@@ -165,6 +165,52 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(len(report["next_steps"]), 7)
         self.assertTrue(all(check["status"] != "met" for check in report["checks"]))
 
+    def test_explicit_no_runtime_environment_statement_satisfies_environment_check(self) -> None:
+        files = {
+            ".github/ISSUE_TEMPLATE/feature-request.md": "# Feature request\n",
+            ".github/pull_request_template.md": "# Change\n",
+            ".github/workflows/ci.yml": "name: Tests\nsteps:\n  - run: python -m unittest\n",
+            "AGENTS.md": "# Instructions\nDo not deploy or publish without explicit approval.\n",
+            "README.md": (
+                "# Demo\n## Setup\nRun `python -m demo` after installation.\n"
+                "No runtime environment variables are required.\n"
+                "## Tests\nRun tests locally.\n"
+            ),
+            "pyproject.toml": "[tool.pytest.ini_options]\ntestpaths = ['tests']\n",
+        }
+        fixture = GitHubFixture(files)
+
+        report = audit_repository("acme/demo", client=GitHubClient(transport=fixture)).to_dict()
+        environment = next(
+            check for check in report["checks"] if check["id"] == "environment_example"
+        )
+
+        self.assertEqual(environment["status"], "met")
+        self.assertEqual(environment["score"], 10)
+        self.assertEqual(environment["evidence"][0]["path"], "README.md")
+        self.assertEqual(environment["evidence"][0]["line"], 4)
+        self.assertNotIn("environment configuration", " ".join(report["next_steps"]).lower())
+
+    def test_environment_check_rejects_ambiguous_readme_language(self) -> None:
+        fixture = GitHubFixture(
+            {
+                "README.md": (
+                    "# Demo\n## Setup\nRun `python -m demo`.\n"
+                    "Runtime environment variables can configure optional integrations.\n"
+                )
+            }
+        )
+
+        report = audit_repository("acme/demo", client=GitHubClient(transport=fixture)).to_dict()
+        environment = next(
+            check for check in report["checks"] if check["id"] == "environment_example"
+        )
+
+        self.assertEqual(environment["status"], "not_evidenced")
+        next_steps = " ".join(report["next_steps"])
+        self.assertIn("If runtime configuration is required", next_steps)
+        self.assertIn("otherwise state explicitly", next_steps)
+
     def test_private_and_truncated_repositories_fail_closed(self) -> None:
         with self.assertRaises(PrivateRepositoryError):
             audit_repository(
@@ -300,6 +346,101 @@ class IssueFulfillmentTests(unittest.TestCase):
         )
         self.assertEqual(issue_fulfillment.extract_repository(body), "acme/demo")
 
+    def test_extracts_only_canonical_paid_interest_values(self) -> None:
+        for value in ("Yes", "Maybe", "No"):
+            with self.subTest(value=value):
+                body = f"### Fixed-price remediation interest\n\n{value}\n"
+                self.assertEqual(issue_fulfillment.extract_paid_interest(body), value)
+
+        self.assertIsNone(
+            issue_fulfillment.extract_paid_interest(
+                "### Fixed-price remediation interest\n\nYes, contact me\n"
+            )
+        )
+        self.assertIsNone(
+            issue_fulfillment.extract_paid_interest(
+                "### Fixed-price remediation interest\n\nYes\n\n"
+                "### Fixed-price remediation interest\n\nNo\n"
+            )
+        )
+
+    def test_commercial_interest_is_neutral_and_fail_closed(self) -> None:
+        self.assertTrue(
+            issue_fulfillment.has_commercial_interest(
+                "### Fixed-price remediation interest\n\nYes\n"
+            )
+        )
+        self.assertTrue(
+            issue_fulfillment.has_commercial_interest(
+                "### Fixed-price remediation interest\n\nMaybe\n"
+            )
+        )
+        self.assertFalse(
+            issue_fulfillment.has_commercial_interest(
+                "### Fixed-price remediation interest\n\nNo\n"
+            )
+        )
+        self.assertFalse(issue_fulfillment.has_commercial_interest(""))
+
+    def test_issue_script_emits_boolean_commercial_interest_output(self) -> None:
+        body = (
+            "### Public repository\n\nhttps://github.com/acme/demo\n\n"
+            "### Fixed-price remediation interest\n\nMaybe\n"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            event_path = root / "event.json"
+            comment_path = root / "comment.md"
+            output_path = root / "github-output.txt"
+            event_path.write_text(json.dumps({"issue": {"body": body}}), encoding="utf-8")
+            environment = {
+                "AUDIT_REQUEST_COMMENT": str(comment_path),
+                "GITHUB_EVENT_PATH": str(event_path),
+                "GITHUB_OUTPUT": str(output_path),
+            }
+            with (
+                mock.patch.dict("os.environ", environment, clear=True),
+                mock.patch.object(
+                    issue_fulfillment,
+                    "fulfill_event",
+                    return_value=("report", 0),
+                ),
+            ):
+                result = issue_fulfillment.main()
+            output = output_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result, 0)
+        self.assertEqual(output, "commercial-interest=true\n")
+
+    def test_issue_script_does_not_label_interest_when_audit_fails(self) -> None:
+        body = (
+            "### Public repository\n\nhttps://github.com/acme/missing\n\n"
+            "### Fixed-price remediation interest\n\nYes\n"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            event_path = root / "event.json"
+            output_path = root / "github-output.txt"
+            event_path.write_text(json.dumps({"issue": {"body": body}}), encoding="utf-8")
+            environment = {
+                "AUDIT_REQUEST_COMMENT": str(root / "comment.md"),
+                "GITHUB_EVENT_PATH": str(event_path),
+                "GITHUB_OUTPUT": str(output_path),
+            }
+            with (
+                mock.patch.dict("os.environ", environment, clear=True),
+                mock.patch.object(
+                    issue_fulfillment,
+                    "fulfill_event",
+                    return_value=("bounded error", 2),
+                ),
+            ):
+                result = issue_fulfillment.main()
+            output = output_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result, 0)
+        self.assertEqual(output, "commercial-interest=false\n")
+
     def test_comment_is_disclosed_and_preserves_report_limits(self) -> None:
         report = audit_repository(
             "acme/demo",
@@ -309,6 +450,44 @@ class IssueFulfillmentTests(unittest.TestCase):
         self.assertIn("automatically generated", comment)
         self.assertIn("not a vulnerability or security assessment", comment)
         self.assertIn("Evidence score: **100/100", comment)
+        self.assertIn("human-reviewed remediation proposal", comment)
+        self.assertIn("proposal requested", comment)
+
+
+class RepositoryWorkflowTests(unittest.TestCase):
+    def test_fulfillment_requires_title_and_audit_request_label(self) -> None:
+        workflow = Path(".github/workflows/fulfill-audit-request.yml").read_text(encoding="utf-8")
+
+        self.assertIn("startsWith(github.event.issue.title, '[Audit request]')", workflow)
+        self.assertIn("contains(github.event.issue.labels.*.name, 'audit-request')", workflow)
+        self.assertIn("steps.prepare.outputs.commercial-interest == 'true'", workflow)
+        self.assertIn('gh issue edit "$ISSUE_NUMBER" --add-label commercial-interest', workflow)
+
+    def test_consumer_job_runs_local_action_and_asserts_outputs(self) -> None:
+        workflow = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+        self.assertIn("uses: ./", workflow)
+        for output in ("score", "band", "report-path", "revision"):
+            self.assertIn(f"steps.local-audit.outputs.{output}", workflow)
+
+
+class RepositoryAssetTests(unittest.TestCase):
+    def test_readme_first_screen_names_agents_and_leads_to_free_audit(self) -> None:
+        readme = Path("README.md").read_text(encoding="utf-8")
+        first_screen = "\n".join(readme.splitlines()[:20])
+
+        self.assertIn("actions/workflows/ci.yml/badge.svg", first_screen)
+        for agent in ("Codex", "Claude Code", "GitHub Copilot coding agent", "Cursor"):
+            self.assertIn(agent, first_screen)
+        self.assertIn("Request a free automated audit", first_screen)
+        self.assertIn("docs/sample-report-v1.md", first_screen)
+
+    def test_sample_report_is_pinned_to_the_v1_commit(self) -> None:
+        sample = Path("docs/sample-report-v1.md").read_text(encoding="utf-8")
+
+        revision = "7a507bc0cb42f8c04fb18e53a46371b37b5bd56f"
+        self.assertIn(f"Immutable revision: `{revision}`", sample)
+        self.assertIn(f"/blob/{revision}/README.md", sample)
 
 
 if __name__ == "__main__":

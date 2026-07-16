@@ -20,6 +20,10 @@ from .render import render_markdown
 PUBLIC_REPOSITORY_SECTION = re.compile(
     r"(?ms)^### Public repository\s*\n+(.*?)(?=^### |\Z)"
 )
+PAID_INTEREST_SECTION = re.compile(
+    r"(?ms)^### Fixed-price remediation interest\s*\n+(.*?)(?=^### |\Z)"
+)
+PAID_INTEREST_VALUES = frozenset({"Yes", "Maybe", "No"})
 
 
 def extract_repository(body: str) -> str:
@@ -32,6 +36,22 @@ def extract_repository(body: str) -> str:
     return parse_repository_ref(value).slug
 
 
+def extract_paid_interest(body: str) -> str | None:
+    """Return one exact issue-form interest value, failing closed on ambiguity."""
+
+    matches = PAID_INTEREST_SECTION.findall(body)
+    if len(matches) != 1:
+        return None
+    value = matches[0].strip()
+    return value if value in PAID_INTEREST_VALUES else None
+
+
+def has_commercial_interest(body: str) -> bool:
+    """Return whether a canonical response indicates non-binding paid interest."""
+
+    return extract_paid_interest(body) in {"Yes", "Maybe"}
+
+
 def build_comment(report: AuditReport) -> str:
     """Render a transparent, non-commercial automated fulfillment comment."""
 
@@ -40,6 +60,12 @@ def build_comment(report: AuditReport) -> str:
         "snapshot. No repository code was cloned or executed.\n\n"
         + render_markdown(report)
         + "\n---\n"
+        "### Put the report to work\n\n"
+        "Install the [free GitHub Action](https://github.com/wrightops-ai/"
+        "agent-ready-repo-auditor#github-action) to keep the evidence check running. "
+        "For a human-reviewed remediation proposal, reply `proposal requested` with the "
+        "public gap you want prioritized. That reply is non-binding; scope and payment "
+        "would require a separate written agreement.\n\n"
         "The issue-form interest question is non-binding demand research. This repository "
         "does not accept payment or create a service contract. Do not post secrets, private "
         "repository details, credentials, or personal data.\n"
@@ -87,10 +113,29 @@ def main() -> int:
         sys.stderr.write("GitHub issue event must be a JSON object.\n")
         return 2
 
+    issue = event.get("issue")
+    issue_body = issue.get("body") if isinstance(issue, dict) else None
+    commercial_interest = (
+        has_commercial_interest(issue_body) if isinstance(issue_body, str) else False
+    )
     comment, audit_status = fulfill_event(event, token=os.environ.get("GITHUB_TOKEN"))
+    _write_action_output(
+        os.environ.get("GITHUB_OUTPUT"),
+        "commercial-interest",
+        "true" if commercial_interest and audit_status == 0 else "false",
+    )
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(comment, encoding="utf-8")
     if audit_status:
         sys.stderr.write("Audit request failed closed; a bounded error comment was prepared.\n")
     return 0
+
+
+def _write_action_output(path_value: str | None, name: str, value: str) -> None:
+    if not path_value:
+        return
+    path = Path(path_value)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(f"{name}={value}\n")

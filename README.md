@@ -1,6 +1,15 @@
 # Agent-Ready Repo Auditor
 
-A dependency-free Python CLI and library that audits **public GitHub evidence** for coding-agent operational readiness. It reads one immutable default-branch snapshot and emits deterministic JSON or Markdown with source links for every positive finding.
+[![CI](https://github.com/wrightops-ai/agent-ready-repo-auditor/actions/workflows/ci.yml/badge.svg)](https://github.com/wrightops-ai/agent-ready-repo-auditor/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/wrightops-ai/agent-ready-repo-auditor)](https://github.com/wrightops-ai/agent-ready-repo-auditor/releases/latest)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](#setup)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2F855A.svg)](LICENSE)
+
+**Find the public setup, instruction, verification, and safety-boundary gaps that make coding agents unreliable.**
+
+Agent-Ready Repo Auditor is a dependency-free Python CLI, library, and GitHub Action for repositories used with **Codex, Claude Code, GitHub Copilot coding agent, Cursor, or mixed-agent workflows**. It reads one immutable public default-branch snapshot and emits deterministic JSON or Markdown with source links for every positive finding.
+
+[Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [See the immutable v1 sample report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
 
 It never clones or executes repository code. It is not a vulnerability scanner, security assessment, compliance review, or proof that documentation is accurate.
 
@@ -33,9 +42,13 @@ The action writes `agent-ready-audit.md`, adds the evidence report to the workfl
 
 Want to see the output before installing it? [Request one free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml). Requests and reports are public. The form's remediation-interest question is non-binding demand research; this repository does not accept payment or create a service contract.
 
+For a concrete example, read the [sample report for the immutable `v1` release](docs/sample-report-v1.md), generated from public evidence at revision `7a507bc0cb42f8c04fb18e53a46371b37b5bd56f`.
+
 ## Setup
 
 Prerequisite: Python 3.10 or newer. There are no third-party runtime dependencies.
+
+No runtime environment variables are required. The GitHub Action accepts an optional `github-token` input, used only to raise API rate limits for public read requests.
 
 ```bash
 cd agent-ready-repo-auditor
@@ -59,7 +72,7 @@ The 100-point evidence score covers:
 | --- | ---: |
 | Root README with setup guidance | 20 |
 | Recognized coding-agent instructions | 20 |
-| Redacted environment example | 10 |
+| Redacted environment example or explicit README no-configuration statement | 10 |
 | GitHub Actions workflow | 15 |
 | Issue and pull-request templates | 10 |
 | Verification commands or automation | 15 |
