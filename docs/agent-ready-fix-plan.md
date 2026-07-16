@@ -9,8 +9,9 @@ For **$149 USD**, WrightOps reviews one completed
 and posts exactly three fix cards to that same public GitHub issue.
 
 [Inspect a complete demonstration Fix Plan](sample-fix-plan-claude-code.md)
-before requesting an invoice. The sample is pinned to public evidence and is
-not a paid, commissioned, or endorsed review.
+before [requesting scope confirmation](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml).
+The sample is pinned to public evidence and is not a paid, commissioned, or
+endorsed review.
 
 Each fix card includes:
 
@@ -27,17 +28,19 @@ review.
 
 ## Before payment
 
-Complete the free audit first. Then email
-[`zach@zachwright.xyz`](mailto:zach@zachwright.xyz?subject=%24149%20Agent-Ready%20Repo%20Fix%20Plan&body=Public%20audit%20issue%20URL%3A%0APublic%20repository%20URL%3A%0AHighest-priority%20operational%20pain%3A%0A%0ADo%20not%20include%20credentials%2C%20private%20repository%20details%2C%20customer%20data%2C%20or%20PayPal%20transaction%20details.)
+Complete the free audit first. Then submit the
+[public Fix Plan request](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml)
 with:
 
 - the public audit issue URL;
 - the public repository URL; and
 - the single operational pain to prioritize.
 
-Do not send credentials, private repository information, customer data, or
-PayPal transaction identifiers. WrightOps will confirm that the request fits
-the fixed scope before issuing a buyer-specific PayPal goods/services invoice.
+Do not submit credentials, private repository information, customer data,
+personal data, or PayPal transaction identifiers. Opening the request does not
+create a contract or payment obligation. WrightOps will confirm the fixed scope
+on the public issue, then provide a private business-email path for the
+buyer-specific PayPal goods/services invoice.
 
 ## Public delivery and authorization
 

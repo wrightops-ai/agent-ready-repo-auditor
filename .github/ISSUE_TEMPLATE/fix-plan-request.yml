@@ -1,0 +1,58 @@
+name: $149 Agent-Ready Repo Fix Plan
+description: Request scope confirmation for exactly three public, human-reviewed fix cards.
+title: "[Fix Plan request] "
+labels: [fix-plan-request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only after the free automated audit has completed.
+
+        WrightOps will review the public audit and confirm whether it fits the fixed scope before requesting payment through a private, buyer-specific PayPal goods/services invoice. Opening this issue does not create a contract or payment obligation.
+
+        The delivered Fix Plan contains exactly three public fix cards for one public repository at one immutable revision. Do not include credentials, private repository information, customer data, personal data, or PayPal transaction details.
+  - type: input
+    id: audit_issue
+    attributes:
+      label: Completed public audit issue
+      description: Enter the URL of the completed WrightOps automated-audit issue.
+      placeholder: https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/123
+    validations:
+      required: true
+  - type: input
+    id: repository
+    attributes:
+      label: Public repository
+      description: Enter the same canonical public GitHub repository URL used in the audit.
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+  - type: textarea
+    id: priority
+    attributes:
+      label: Highest-priority operational pain
+      description: Name the single setup, instruction, verification, or contribution problem the three fix cards should prioritize.
+    validations:
+      required: true
+  - type: checkboxes
+    id: authorization
+    attributes:
+      label: Authorization and public-delivery acknowledgement
+      options:
+        - label: I am authorized to commission a public review of this repository and understand that the request, evidence, and delivered fix cards will be public.
+          required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Fixed-scope acknowledgement
+      options:
+        - label: I understand the $149 Fix Plan contains exactly three fix cards, at most 45 minutes of human review, and no implementation work.
+          required: true
+        - label: I reviewed the published scope, exclusions, correction, and refund terms before requesting scope confirmation.
+          required: true
+        - label: I understand that WrightOps will request payment only after confirming scope and that payment details must remain private.
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        Review the [complete terms and demonstration Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/agent-ready-fix-plan.md). After WrightOps confirms scope on this issue, use the private business email provided in that confirmation to receive the PayPal invoice. Never post payment details to GitHub.

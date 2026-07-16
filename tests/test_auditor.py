@@ -451,6 +451,7 @@ class IssueFulfillmentTests(unittest.TestCase):
         self.assertIn("not a vulnerability or security assessment", comment)
         self.assertIn("Evidence score: **100/100", comment)
         self.assertIn("$149 Agent-Ready Repo Fix Plan", comment)
+        self.assertIn("template=fix-plan-request.yml", comment)
         self.assertIn("buyer-specific PayPal goods/services invoice", comment)
         self.assertIn("Do not post payment details here", comment)
 
@@ -471,6 +472,21 @@ class RepositoryWorkflowTests(unittest.TestCase):
         for output in ("score", "band", "report-path", "revision"):
             self.assertIn(f"steps.local-audit.outputs.{output}", workflow)
 
+    def test_fix_plan_request_is_public_bounded_and_payment_private(self) -> None:
+        template = Path(".github/ISSUE_TEMPLATE/fix-plan-request.yml").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn('title: "[Fix Plan request] "', template)
+        self.assertIn("labels: [fix-plan-request]", template)
+        for field in ("audit_issue", "repository", "priority", "authorization", "scope"):
+            self.assertIn(f"id: {field}", template)
+        self.assertIn("exactly three fix cards", template)
+        self.assertIn("at most 45 minutes of human review", template)
+        self.assertIn("does not create a contract or payment obligation", template)
+        self.assertIn("buyer-specific PayPal goods/services invoice", template)
+        self.assertIn("Never post payment details to GitHub", template)
+
 
 class RepositoryAssetTests(unittest.TestCase):
     def test_readme_first_screen_names_agents_and_leads_to_free_audit(self) -> None:
@@ -481,6 +497,7 @@ class RepositoryAssetTests(unittest.TestCase):
         for agent in ("Codex", "Claude Code", "GitHub Copilot coding agent", "Cursor"):
             self.assertIn(agent, first_screen)
         self.assertIn("Request a free automated audit", first_screen)
+        self.assertIn("template=fix-plan-request.yml", first_screen)
         self.assertIn("docs/sample-report-v1.md", first_screen)
 
     def test_sample_report_is_pinned_to_the_v1_commit(self) -> None:
@@ -492,10 +509,15 @@ class RepositoryAssetTests(unittest.TestCase):
 
     def test_fix_plan_offer_has_an_exact_three_card_sample(self) -> None:
         offer = Path("docs/agent-ready-fix-plan.md").read_text(encoding="utf-8")
+        normalized_offer = " ".join(offer.split())
         sample = Path("docs/sample-fix-plan-claude-code.md").read_text(encoding="utf-8")
 
         self.assertIn("$149 USD", offer)
         self.assertIn("sample-fix-plan-claude-code.md", offer)
+        self.assertIn("template=fix-plan-request.yml", offer)
+        self.assertIn(
+            "does not create a contract or payment obligation", normalized_offer
+        )
         self.assertEqual(sample.count("## Fix card "), 3)
         self.assertIn("not paid, commissioned, or endorsed", sample)
         self.assertIn("immutable revision", sample)

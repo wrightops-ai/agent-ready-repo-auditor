@@ -9,7 +9,7 @@
 
 Agent-Ready Repo Auditor is a dependency-free Python CLI, library, and GitHub Action for repositories used with **Codex, Claude Code, GitHub Copilot coding agent, Cursor, or mixed-agent workflows**. It reads one immutable public default-branch snapshot and emits deterministic JSON or Markdown with source links for every positive finding.
 
-[Explore the WrightOps offer site](https://wrightops-ai.github.io/website/) · [Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Get a $149 human-reviewed Fix Plan](docs/agent-ready-fix-plan.md) · [Inspect a sample Fix Plan](docs/sample-fix-plan-claude-code.md) · [See the immutable audit report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
+[Explore the WrightOps offer site](https://wrightops-ai.github.io/website/) · [Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Request a $149 human-reviewed Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml) · [Inspect a sample Fix Plan](docs/sample-fix-plan-claude-code.md) · [See the immutable audit report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
 
 It never clones or executes repository code. It is not a vulnerability scanner, security assessment, compliance review, or proof that documentation is accurate.
 
@@ -42,7 +42,7 @@ The action writes `agent-ready-audit.md`, adds the evidence report to the workfl
 
 Want to see the output before installing it? [Request one free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml). Requests and reports are public. The form's remediation-interest question is non-binding demand research; opening an issue does not create a service contract.
 
-Need exact next steps after the report? The [$149 Agent-Ready Repo Fix Plan](docs/agent-ready-fix-plan.md) adds exactly three human-reviewed fix cards to the public audit issue within one business day. Scope is confirmed before a buyer-specific PayPal goods/services invoice is issued.
+Need exact next steps after the report? The [$149 Agent-Ready Repo Fix Plan](docs/agent-ready-fix-plan.md) adds exactly three human-reviewed fix cards to the public audit issue within one business day. [Submit the completed audit for scope confirmation](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml); payment is requested privately through a buyer-specific PayPal goods/services invoice only after the public request fits the fixed scope.
 
 For a concrete example, read the [sample report for the immutable `v1` release](docs/sample-report-v1.md), generated from public evidence at revision `7a507bc0cb42f8c04fb18e53a46371b37b5bd56f`.
 
@@ -127,7 +127,7 @@ python3 -m agent_ready_repo_auditor wrightops-ai/website --format json
 
 This repository is suitable as the deterministic evidence engine for a human-reviewed readiness audit. A responsible paid delivery should state the scanned revision, manually verify the generated findings, add repository-specific priorities, and preserve the report's limitations. Do not market it as a security audit or promise operational outcomes that were not measured.
 
-The fixed-price entry offer is the [$149 Agent-Ready Repo Fix Plan](docs/agent-ready-fix-plan.md). It covers one public repository and exactly three human-reviewed fix cards, delivered publicly on the completed audit issue. It does not include implementation. Payment details remain private, and payment is requested only after the public issue and scope are matched.
+The fixed-price entry offer is the [$149 Agent-Ready Repo Fix Plan](docs/agent-ready-fix-plan.md). It covers one public repository and exactly three human-reviewed fix cards, delivered publicly on the completed audit issue. It does not include implementation. A [structured public request](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml) records authorization and scope acknowledgement without collecting payment details; payment is requested privately only after the audit and request are matched.
 
 ## License
 
