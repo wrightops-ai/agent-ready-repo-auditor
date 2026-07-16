@@ -8,7 +8,7 @@ body:
       value: |
         Use this form only after the free automated audit has completed.
 
-        WrightOps will review the public audit and confirm whether it fits the fixed scope before requesting payment through a private, buyer-specific PayPal goods/services invoice. Opening this issue does not create a contract or payment obligation.
+        Automated preflight will verify that the completed audit and requested repository match. WrightOps will then confirm whether the request fits the fixed scope within one business day. Opening this issue does not create a contract or payment obligation.
 
         The delivered Fix Plan contains exactly three public fix cards for one public repository at one immutable revision. Do not include credentials, private repository information, customer data, personal data, or PayPal transaction details.
   - type: input
@@ -55,4 +55,4 @@ body:
   - type: markdown
     attributes:
       value: |
-        Review the [complete terms and demonstration Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/agent-ready-fix-plan.md). After WrightOps confirms scope on this issue, use the private business email provided in that confirmation to receive the PayPal invoice. Never post payment details to GitHub.
+        Review the [complete terms and demonstration Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/agent-ready-fix-plan.md). After WrightOps confirms scope on this issue, use the dedicated [PayPal goods/services checkout](https://www.paypal.com/ncp/payment/H9VVRGRGA3DCG). Do not pay before confirmation, and never post payment details to GitHub.

@@ -1,0 +1,50 @@
+name: Triage Fix Plan request
+
+on:
+  issues:
+    types: [opened]
+
+concurrency:
+  group: fix-plan-request-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  triage:
+    if: startsWith(github.event.issue.title, '[Fix Plan request]') && contains(github.event.issue.labels.*.name, 'fix-plan-request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify completed audit and prepare acknowledgement
+        id: triage
+        env:
+          FIX_PLAN_TRIAGE_COMMENT: ${{ runner.temp }}/fix-plan-triage-comment.md
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/triage_fix_plan_request.py
+      - name: Publish bounded triage result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          FIX_PLAN_TRIAGE_COMMENT: ${{ runner.temp }}/fix-plan-triage-comment.md
+        run: gh issue comment "$ISSUE_NUMBER" --body-file "$FIX_PLAN_TRIAGE_COMMENT"
+      - name: Mark request ready for scope review
+        if: steps.triage.outputs.scope-review-ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh label create scope-review --color FBCA04 --description "Verified Fix Plan request awaiting human scope decision" 2>/dev/null || true
+          gh issue edit "$ISSUE_NUMBER" --add-label scope-review
+          gh issue edit "$ISSUE_NUMBER" --remove-label needs-correction 2>/dev/null || true
+      - name: Mark request as needing correction
+        if: steps.triage.outputs.scope-review-ready != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh label create needs-correction --color D93F0B --description "Request failed bounded automated validation" 2>/dev/null || true
+          gh issue edit "$ISSUE_NUMBER" --add-label needs-correction
+          gh issue edit "$ISSUE_NUMBER" --remove-label scope-review 2>/dev/null || true

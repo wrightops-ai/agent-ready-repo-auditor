@@ -38,9 +38,11 @@ with:
 
 Do not submit credentials, private repository information, customer data,
 personal data, or PayPal transaction identifiers. Opening the request does not
-create a contract or payment obligation. WrightOps will confirm the fixed scope
-on the public issue, then provide a private business-email path for the
-buyer-specific PayPal goods/services invoice.
+create a contract or payment obligation. Automated preflight verifies that the
+completed audit and repository match. WrightOps then confirms the fixed scope
+on the public issue within one business day. Only after that confirmation, use
+the dedicated [PayPal goods/services checkout](https://www.paypal.com/ncp/payment/H9VVRGRGA3DCG).
+Do not pay before confirmation or post payment details to GitHub.
 
 ## Public delivery and authorization
 

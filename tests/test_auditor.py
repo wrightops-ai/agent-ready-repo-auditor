@@ -13,8 +13,9 @@ from unittest import mock
 from urllib.error import HTTPError
 
 from agent_ready_repo_auditor import audit_repository, parse_repository_ref, render_json, render_markdown
-from agent_ready_repo_auditor import action_runtime, issue_fulfillment
+from agent_ready_repo_auditor import action_runtime, fix_plan_triage, issue_fulfillment
 from agent_ready_repo_auditor.errors import (
+    FixPlanValidationError,
     GitHubRateLimitError,
     InputValidationError,
     PrivateRepositoryError,
@@ -452,8 +453,139 @@ class IssueFulfillmentTests(unittest.TestCase):
         self.assertIn("Evidence score: **100/100", comment)
         self.assertIn("$149 Agent-Ready Repo Fix Plan", comment)
         self.assertIn("template=fix-plan-request.yml", comment)
-        self.assertIn("buyer-specific PayPal goods/services invoice", comment)
-        self.assertIn("Do not post payment details here", comment)
+        self.assertIn(fix_plan_triage.CHECKOUT_URL, comment)
+        self.assertIn("Do not pay before confirmation", comment)
+
+
+class FixPlanTriageTests(unittest.TestCase):
+    def request_body(
+        self,
+        *,
+        audit_url: str = (
+            "https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/123"
+        ),
+        repository: str = "https://github.com/acme/demo",
+        priority: str = "Reduce setup ambiguity.",
+    ) -> str:
+        checked_scope = "\n".join(
+            f"- [x] {label}" for label in fix_plan_triage.SCOPE_LABELS
+        )
+        return (
+            f"### Completed public audit issue\n{audit_url}\n\n"
+            f"### Public repository\n{repository}\n\n"
+            f"### Highest-priority operational pain\n{priority}\n\n"
+            "### Authorization and public-delivery acknowledgement\n"
+            f"- [x] {fix_plan_triage.AUTHORIZATION_LABEL}\n\n"
+            f"### Fixed-scope acknowledgement\n{checked_scope}\n"
+        )
+
+    def completed_audit_fetcher(self, path: str, token: str | None) -> object:
+        self.assertEqual(token, "token")
+        if path.endswith("/comments?per_page=100"):
+            return [
+                {
+                    "body": (
+                        f"> {fix_plan_triage.REPORT_MARKER}\n\n"
+                        "Evidence score: **88/100**"
+                    )
+                }
+            ]
+        return {
+            "title": "[Audit request] acme/demo",
+            "labels": [{"name": "audit-request"}],
+            "body": "### Public repository\nhttps://github.com/acme/demo\n",
+        }
+
+    def test_extract_request_accepts_only_bounded_canonical_fields(self) -> None:
+        issue_number, repository, priority = fix_plan_triage.extract_request(
+            self.request_body()
+        )
+
+        self.assertEqual(issue_number, 123)
+        self.assertEqual(repository, "acme/demo")
+        self.assertEqual(priority, "Reduce setup ambiguity.")
+
+    def test_extract_request_rejects_unchecked_or_cross_repository_input(self) -> None:
+        unchecked = self.request_body().replace("- [x]", "- [ ]", 1)
+        with self.assertRaises(FixPlanValidationError):
+            fix_plan_triage.extract_request(unchecked)
+        with self.assertRaises(FixPlanValidationError):
+            fix_plan_triage.extract_request(
+                self.request_body(
+                    audit_url="https://github.com/acme/demo/issues/123"
+                )
+            )
+
+    def test_verify_completed_audit_matches_repository_and_report_marker(self) -> None:
+        fix_plan_triage.verify_completed_audit(
+            123,
+            "acme/demo",
+            token="token",
+            fetch_json=self.completed_audit_fetcher,
+        )
+
+        with self.assertRaises(FixPlanValidationError):
+            fix_plan_triage.verify_completed_audit(
+                123,
+                "acme/other",
+                token="token",
+                fetch_json=self.completed_audit_fetcher,
+            )
+
+    def test_triage_acknowledges_valid_request_without_accepting_payment(self) -> None:
+        comment, ready = fix_plan_triage.triage_event(
+            {"issue": {"body": self.request_body()}},
+            token="token",
+            fetch_json=self.completed_audit_fetcher,
+        )
+
+        self.assertTrue(ready)
+        self.assertIn("one business day", comment)
+        self.assertIn("Do not pay until", comment)
+        self.assertIn(fix_plan_triage.CHECKOUT_URL, comment)
+        self.assertIn("not scope acceptance", comment)
+
+    def test_triage_failure_does_not_reflect_submitted_issue_content(self) -> None:
+        secret = "do-not-reflect-this-value"
+        body = self.request_body(
+            audit_url="https://example.com/issues/123", priority=secret
+        )
+
+        comment, ready = fix_plan_triage.triage_event({"issue": {"body": body}})
+
+        self.assertFalse(ready)
+        self.assertIn("needs correction", comment)
+        self.assertNotIn(secret, comment)
+        self.assertNotIn("example.com", comment)
+
+    def test_main_writes_comment_and_action_output(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            event_path = root / "event.json"
+            comment_path = root / "comment.md"
+            output_path = root / "github-output.txt"
+            event_path.write_text(json.dumps({"issue": {"body": "body"}}), encoding="utf-8")
+            environment = {
+                "FIX_PLAN_TRIAGE_COMMENT": str(comment_path),
+                "GITHUB_EVENT_PATH": str(event_path),
+                "GITHUB_OUTPUT": str(output_path),
+            }
+            with (
+                mock.patch.dict("os.environ", environment, clear=True),
+                mock.patch.object(
+                    fix_plan_triage,
+                    "triage_event",
+                    return_value=("bounded acknowledgement", True),
+                ),
+            ):
+                result = fix_plan_triage.main()
+
+            self.assertEqual(result, 0)
+            self.assertEqual(comment_path.read_text(encoding="utf-8"), "bounded acknowledgement")
+            self.assertEqual(
+                output_path.read_text(encoding="utf-8"),
+                "scope-review-ready=true\n",
+            )
 
 
 class RepositoryWorkflowTests(unittest.TestCase):
@@ -472,7 +604,7 @@ class RepositoryWorkflowTests(unittest.TestCase):
         for output in ("score", "band", "report-path", "revision"):
             self.assertIn(f"steps.local-audit.outputs.{output}", workflow)
 
-    def test_fix_plan_request_is_public_bounded_and_payment_private(self) -> None:
+    def test_fix_plan_request_is_public_bounded_and_payment_is_deferred(self) -> None:
         template = Path(".github/ISSUE_TEMPLATE/fix-plan-request.yml").read_text(
             encoding="utf-8"
         )
@@ -484,8 +616,24 @@ class RepositoryWorkflowTests(unittest.TestCase):
         self.assertIn("exactly three fix cards", template)
         self.assertIn("at most 45 minutes of human review", template)
         self.assertIn("does not create a contract or payment obligation", template)
-        self.assertIn("buyer-specific PayPal goods/services invoice", template)
-        self.assertIn("Never post payment details to GitHub", template)
+        self.assertIn(fix_plan_triage.CHECKOUT_URL, template)
+        self.assertIn("Do not pay before confirmation", template)
+        self.assertIn("never post payment details to GitHub", template)
+
+    def test_fix_plan_triage_requires_exact_trigger_and_labels_outcome(self) -> None:
+        workflow = Path(
+            ".github/workflows/triage-fix-plan-request.yml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            "startsWith(github.event.issue.title, '[Fix Plan request]')", workflow
+        )
+        self.assertIn(
+            "contains(github.event.issue.labels.*.name, 'fix-plan-request')", workflow
+        )
+        self.assertIn("steps.triage.outputs.scope-review-ready == 'true'", workflow)
+        self.assertIn('gh issue edit "$ISSUE_NUMBER" --add-label scope-review', workflow)
+        self.assertIn('gh issue edit "$ISSUE_NUMBER" --add-label needs-correction', workflow)
 
 
 class RepositoryAssetTests(unittest.TestCase):
@@ -519,6 +667,8 @@ class RepositoryAssetTests(unittest.TestCase):
             "does not create a contract or payment obligation", normalized_offer
         )
         self.assertIn("full purchase-price refund", normalized_offer)
+        self.assertIn(fix_plan_triage.CHECKOUT_URL, offer)
+        self.assertIn("Do not pay before confirmation", offer)
         self.assertIn(
             "WrightOps absorbs that cost and does not deduct it", normalized_offer
         )

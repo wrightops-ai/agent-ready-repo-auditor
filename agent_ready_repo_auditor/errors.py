@@ -55,3 +55,12 @@ class GitHubAPIError(AuditorError):
 
 class GitHubResponseError(AuditorError):
     code = "invalid_github_response"
+
+
+class FixPlanValidationError(AuditorError):
+    code = "invalid_fix_plan_request"
+
+
+class FixPlanVerificationError(AuditorError):
+    code = "fix_plan_verification_failed"
+    retryable = True
