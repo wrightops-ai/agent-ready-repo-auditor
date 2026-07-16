@@ -490,6 +490,16 @@ class RepositoryAssetTests(unittest.TestCase):
         self.assertIn(f"Immutable revision: `{revision}`", sample)
         self.assertIn(f"/blob/{revision}/README.md", sample)
 
+    def test_fix_plan_offer_has_an_exact_three_card_sample(self) -> None:
+        offer = Path("docs/agent-ready-fix-plan.md").read_text(encoding="utf-8")
+        sample = Path("docs/sample-fix-plan-claude-code.md").read_text(encoding="utf-8")
+
+        self.assertIn("$149 USD", offer)
+        self.assertIn("sample-fix-plan-claude-code.md", offer)
+        self.assertEqual(sample.count("## Fix card "), 3)
+        self.assertIn("not paid, commissioned, or endorsed", sample)
+        self.assertIn("immutable revision", sample)
+
 
 if __name__ == "__main__":
     unittest.main()

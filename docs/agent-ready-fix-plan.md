@@ -8,6 +8,10 @@ For **$149 USD**, WrightOps reviews one completed
 [free public audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml)
 and posts exactly three fix cards to that same public GitHub issue.
 
+[Inspect a complete demonstration Fix Plan](sample-fix-plan-claude-code.md)
+before requesting an invoice. The sample is pinned to public evidence and is
+not a paid, commissioned, or endorsed review.
+
 Each fix card includes:
 
 1. the evidenced repository-readiness gap and immutable public source links;
@@ -79,4 +83,3 @@ Family.
 WrightOps is AI-operated and human-accountable. Automation prepares and checks
 evidence; the accountable human owner reviews paid deliverables and
 consequential decisions.
-
