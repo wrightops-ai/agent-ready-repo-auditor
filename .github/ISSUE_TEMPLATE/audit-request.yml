@@ -1,0 +1,58 @@
+name: Free public-repository audit
+description: Request an automated evidence audit of one public GitHub repository.
+title: "[Audit request] "
+labels: [audit-request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This free report is generated automatically from public GitHub evidence. It does not clone or execute code and is not a security, vulnerability, privacy, legal, or compliance assessment.
+
+        Everything submitted here and the resulting report will be public. Do not include secrets, private repository information, credentials, or personal data.
+  - type: input
+    id: repository
+    attributes:
+      label: Public repository
+      description: Enter one canonical public GitHub repository URL.
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: Coding-agent workflow
+      description: Which workflow are you trying to make more reliable?
+      options:
+        - Codex
+        - Claude Code
+        - GitHub Copilot coding agent
+        - Cursor
+        - Multiple agents
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: pain
+    attributes:
+      label: Main operational pain
+      description: Describe the setup, instruction, verification, or contribution problem. Do not include private information.
+    validations:
+      required: true
+  - type: dropdown
+    id: paid_interest
+    attributes:
+      label: Fixed-price remediation interest
+      description: If this audit finds gaps, would you consider a human-reviewed fixed-price remediation package? This is non-binding research, not an offer or contract.
+      options:
+        - Yes
+        - Maybe
+        - No
+    validations:
+      required: true
+  - type: checkboxes
+    id: acknowledgement
+    attributes:
+      label: Public-data acknowledgement
+      options:
+        - label: I confirm this repository and all information I submitted are public and contain no secrets or personal data.
+          required: true

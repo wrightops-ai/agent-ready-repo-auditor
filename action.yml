@@ -1,0 +1,57 @@
+name: Agent-Ready Repository Audit
+description: Audit public GitHub evidence for coding-agent operational readiness without cloning or executing code.
+author: WrightOps AI
+
+branding:
+  icon: check-circle
+  color: blue
+
+inputs:
+  repository:
+    description: Public owner/repository or canonical GitHub URL. Defaults to the current repository.
+    required: false
+    default: ""
+  format:
+    description: Report format, either markdown or json.
+    required: false
+    default: markdown
+  output-file:
+    description: Report path relative to GITHUB_WORKSPACE.
+    required: false
+    default: agent-ready-audit.md
+  fail-threshold:
+    description: Fail when the evidence score is below this integer from 0 through 100.
+    required: false
+    default: "0"
+  github-token:
+    description: Optional GitHub token used only for api.github.com read requests.
+    required: false
+    default: ""
+
+outputs:
+  score:
+    description: Integer evidence percentage from 0 through 100.
+    value: ${{ steps.audit.outputs.score }}
+  band:
+    description: Stable evidence band.
+    value: ${{ steps.audit.outputs.band }}
+  report-path:
+    description: Report path relative to GITHUB_WORKSPACE.
+    value: ${{ steps.audit.outputs.report-path }}
+  revision:
+    description: Immutable audited default-branch revision SHA.
+    value: ${{ steps.audit.outputs.revision }}
+
+runs:
+  using: composite
+  steps:
+    - id: audit
+      shell: bash
+      env:
+        AUDIT_DEFAULT_GITHUB_TOKEN: ${{ github.token }}
+        AUDIT_FORMAT: ${{ inputs.format }}
+        AUDIT_GITHUB_TOKEN: ${{ inputs.github-token }}
+        AUDIT_OUTPUT_FILE: ${{ inputs.output-file }}
+        AUDIT_REPOSITORY: ${{ inputs.repository }}
+        AUDIT_THRESHOLD: ${{ inputs.fail-threshold }}
+      run: python3 "$GITHUB_ACTION_PATH/action_entrypoint.py"

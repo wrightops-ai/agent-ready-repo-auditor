@@ -1,0 +1,31 @@
+name: Fulfill public audit request
+
+on:
+  issues:
+    types: [opened]
+
+concurrency:
+  group: audit-request-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    if: startsWith(github.event.issue.title, '[Audit request]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare bounded audit comment
+        env:
+          AUDIT_REQUEST_COMMENT: ${{ runner.temp }}/audit-comment.md
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/fulfill_audit_request.py
+      - name: Publish as GitHub Actions bot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          AUDIT_REQUEST_COMMENT: ${{ runner.temp }}/audit-comment.md
+        run: gh issue comment "$ISSUE_NUMBER" --body-file "$AUDIT_REQUEST_COMMENT"
