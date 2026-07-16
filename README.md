@@ -9,7 +9,7 @@
 
 Agent-Ready Repo Auditor is a dependency-free Python CLI, library, and GitHub Action for repositories used with **Codex, Claude Code, GitHub Copilot coding agent, Cursor, or mixed-agent workflows**. It reads one immutable public default-branch snapshot and emits deterministic JSON or Markdown with source links for every positive finding.
 
-[Explore the WrightOps offer site](https://wrightops-ai.github.io/website/) · [Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Request a $149 human-reviewed Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml) · [Inspect a sample Fix Plan](docs/sample-fix-plan-claude-code.md) · [See the immutable audit report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
+[Explore the WrightOps offer site](https://zachwright.xyz/) · [Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Request a $149 human-reviewed Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml) · [Inspect a sample Fix Plan](docs/sample-fix-plan-claude-code.md) · [See the immutable audit report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
 
 It never clones or executes repository code. It is not a vulnerability scanner, security assessment, compliance review, or proof that documentation is accurate.
 
