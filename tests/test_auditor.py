@@ -3,6 +3,8 @@ from __future__ import annotations
 import base64
 import io
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from email.message import Message
@@ -280,6 +282,16 @@ class GitHubActionTests(unittest.TestCase):
 
 
 class IssueFulfillmentTests(unittest.TestCase):
+    def test_issue_script_resolves_package_from_clean_entrypoint(self) -> None:
+        completed = subprocess.run(
+            [sys.executable, str(Path("scripts") / "fulfill_audit_request.py")],
+            capture_output=True,
+            check=False,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("GITHUB_EVENT_PATH and AUDIT_REQUEST_COMMENT are required", completed.stderr)
+
     def test_extracts_repository_from_issue_form(self) -> None:
         body = (
             "### Public repository\n\n"
