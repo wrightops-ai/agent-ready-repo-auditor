@@ -47,7 +47,8 @@ buyer-specific PayPal goods/services invoice.
 The buyer must be authorized to commission a public review of the repository.
 The audit request, source evidence, and delivered fix cards are public. Payment
 records and transaction identifiers remain private and are never posted to the
-GitHub issue.
+GitHub issue. WrightOps also sends a private delivery confirmation containing
+the public delivery URL and timestamp.
 
 ## Exclusions
 
@@ -72,14 +73,16 @@ delivery. The correction covers an error in the delivered facts or source
 mapping, not a new repository revision, changed scope, extra fix card, or
 implementation work.
 
-A full refund is available before human review begins or if WrightOps cannot
-deliver the accepted scope. After an acceptance-compliant delivery, non-use or
-a decision not to implement the plan is not by itself a refund basis. Any
-non-waivable statutory rights still apply.
+A full purchase-price refund is available before human review begins, if intake
+is found ineligible before review begins, or if WrightOps cannot deliver the
+accepted scope. Duplicate or erroneous charges are refunded. After an
+acceptance-compliant delivery, non-use or a decision not to implement the plan
+is not by itself a refund basis. Any non-waivable statutory rights still apply.
 
-PayPal's original receiving fee may be non-refundable where PayPal retains it.
-Business payments must use goods/services payment rails, never Friends and
-Family.
+Refunds are returned through the original payment method. PayPal may retain the
+seller's transaction fee when a payment is refunded; WrightOps absorbs that
+cost and does not deduct it from a refund owed to the buyer. Business payments
+must use goods/services payment rails, never Friends and Family.
 
 ## Operator disclosure
 

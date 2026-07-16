@@ -518,10 +518,13 @@ class RepositoryAssetTests(unittest.TestCase):
         self.assertIn(
             "does not create a contract or payment obligation", normalized_offer
         )
+        self.assertIn("full purchase-price refund", normalized_offer)
+        self.assertIn(
+            "WrightOps absorbs that cost and does not deduct it", normalized_offer
+        )
         self.assertEqual(sample.count("## Fix card "), 3)
         self.assertIn("not paid, commissioned, or endorsed", sample)
         self.assertIn("immutable revision", sample)
-
 
 if __name__ == "__main__":
     unittest.main()
