@@ -1,0 +1,83 @@
+name: $249 Founding Agent-Ready Instructions PR
+description: Request scope confirmation for one public, two-file coding-agent instructions PR.
+title: "[Instructions PR request] "
+labels: [instructions-pr-request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only after the free automated audit has completed.
+
+        WrightOps will verify the public inputs and confirm in writing whether the request fits the founding fixed scope. Opening this issue does not create a contract or payment obligation.
+
+        The delivered pull request changes exactly two paths: root `AGENTS.md` and `.github/copilot-instructions.md`. Everything submitted here is public. Do not include credentials, private repository information, customer data, personal data, or payment details.
+  - type: input
+    id: audit_issue
+    attributes:
+      label: Completed public audit issue
+      description: Enter the URL of the completed WrightOps automated-audit issue.
+      placeholder: https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/123
+    validations:
+      required: true
+  - type: input
+    id: repository
+    attributes:
+      label: Public repository
+      description: Enter the same canonical public GitHub repository URL used in the audit.
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Audited immutable revision
+      description: Enter the full 40-character default-branch commit SHA named in the completed audit.
+      placeholder: 0123456789abcdef0123456789abcdef01234567
+    validations:
+      required: true
+  - type: textarea
+    id: public_context
+    attributes:
+      label: Public implementation context
+      description: Link to the committed public contribution, architecture, build, test, and workflow documentation WrightOps should follow. Unknown or private procedures must remain out of scope.
+      placeholder: |
+        https://github.com/owner/repository/blob/FULL_SHA/CONTRIBUTING.md
+        https://github.com/owner/repository/blob/FULL_SHA/README.md
+    validations:
+      required: true
+  - type: input
+    id: fix_plan_credit
+    attributes:
+      label: Eligible Fix Plan delivery (optional)
+      description: If you bought the $149 Fix Plan for this exact repository and revision, enter its public delivery URL for credit review. Leave blank otherwise.
+      placeholder: https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/123#issuecomment-123
+  - type: checkboxes
+    id: authorization
+    attributes:
+      label: Authorization and public-delivery acknowledgement
+      options:
+        - label: I am authorized to commission and publicly receive proposed contribution files for this repository.
+          required: true
+        - label: I confirm that every submitted input is public and contains no credentials, private repository information, customer data, personal data, or payment details.
+          required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Founding fixed-scope acknowledgement
+      options:
+        - label: I understand the $249 offer covers one public repository at one audited revision and exactly two repository paths—root `AGENTS.md` and `.github/copilot-instructions.md`.
+          required: true
+        - label: I understand delivery is one ready-to-merge pull request, one revision round, and no guarantee that the repository owner will approve or merge it.
+          required: true
+        - label: I understand WrightOps reads only committed public documentation and workflows and does not clone or execute repository code.
+          required: true
+        - label: I reviewed the published scope, exclusions, credit, revision, and refund terms before requesting written scope confirmation.
+          required: true
+        - label: I understand payment is requested only after written scope confirmation and the dedicated PayPal Goods & Services checkout is shared privately.
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        Review the [complete Founding Agent-Ready Instructions PR terms](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/agent-ready-instructions-pr.md).
+
+        Do not pay before written scope confirmation. Never post checkout links, transaction identifiers, contact details, or other payment information to GitHub.

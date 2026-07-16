@@ -635,6 +635,32 @@ class RepositoryWorkflowTests(unittest.TestCase):
         self.assertIn('gh issue edit "$ISSUE_NUMBER" --add-label scope-review', workflow)
         self.assertIn('gh issue edit "$ISSUE_NUMBER" --add-label needs-correction', workflow)
 
+    def test_instructions_pr_request_is_public_exact_and_payment_is_private(self) -> None:
+        template = Path(
+            ".github/ISSUE_TEMPLATE/instructions-pr-request.yml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn('title: "[Instructions PR request] "', template)
+        self.assertIn("labels: [instructions-pr-request]", template)
+        for field in (
+            "audit_issue",
+            "repository",
+            "revision",
+            "public_context",
+            "fix_plan_credit",
+            "authorization",
+            "scope",
+        ):
+            self.assertIn(f"id: {field}", template)
+        self.assertIn("root `AGENTS.md`", template)
+        self.assertIn("`.github/copilot-instructions.md`", template)
+        self.assertIn("one ready-to-merge pull request, one revision round", template)
+        self.assertIn("does not clone or execute repository code", template)
+        self.assertIn("does not create a contract or payment obligation", template)
+        self.assertIn("checkout is shared privately", template)
+        self.assertIn("Do not pay before written scope confirmation", template)
+        self.assertNotIn("https://www.paypal.com/", template)
+
 
 class RepositoryAssetTests(unittest.TestCase):
     def test_readme_first_screen_names_agents_and_leads_to_free_audit(self) -> None:
@@ -646,6 +672,7 @@ class RepositoryAssetTests(unittest.TestCase):
             self.assertIn(agent, first_screen)
         self.assertIn("Request a free automated audit", first_screen)
         self.assertIn("template=fix-plan-request.yml", first_screen)
+        self.assertIn("template=instructions-pr-request.yml", first_screen)
         self.assertIn("docs/sample-report-v1.md", first_screen)
 
     def test_sample_report_is_pinned_to_the_v1_commit(self) -> None:
@@ -675,6 +702,39 @@ class RepositoryAssetTests(unittest.TestCase):
         self.assertEqual(sample.count("## Fix card "), 3)
         self.assertIn("not paid, commissioned, or endorsed", sample)
         self.assertIn("immutable revision", sample)
+
+    def test_founding_instructions_pr_offer_is_exact_bounded_and_refundable(self) -> None:
+        offer = Path("docs/agent-ready-instructions-pr.md").read_text(
+            encoding="utf-8"
+        )
+        normalized_offer = " ".join(offer.split())
+
+        self.assertIn("$249 USD", offer)
+        self.assertIn("template=instructions-pr-request.yml", offer)
+        self.assertIn("https://github.com/wrightops-ai/bounty-red-flag-card/pull/1", offer)
+        self.assertIn("root `AGENTS.md`", offer)
+        self.assertIn("`.github/copilot-instructions.md`", offer)
+        self.assertIn("No other repository file is changed", offer)
+        self.assertIn("one ready-to-merge pull request", normalized_offer)
+        self.assertIn("one revision round", normalized_offer)
+        self.assertIn("one business day", normalized_offer)
+        self.assertIn("does not clone or execute repository code", normalized_offer)
+        for exclusion in (
+            "private repositories",
+            "MCP server",
+            "security, privacy, legal, regulatory, or compliance audit",
+            "guaranteed score, runtime or token reduction",
+        ):
+            self.assertIn(exclusion, normalized_offer)
+        self.assertIn("$149 credit", offer)
+        self.assertIn("$100 USD", offer)
+        self.assertIn(
+            "full refund of every payment collected for this Instructions PR",
+            normalized_offer,
+        )
+        self.assertIn("through the original payment rail", normalized_offer)
+        self.assertIn("checkout is shared privately", normalized_offer)
+        self.assertNotIn("https://www.paypal.com/", offer)
 
 if __name__ == "__main__":
     unittest.main()
