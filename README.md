@@ -145,11 +145,14 @@ The fixed-price entry offer is the [$149 Agent-Ready Repo Fix Plan](docs/agent-r
 
 The implementation offer is the
 [$249 Founding Agent-Ready Instructions PR](docs/agent-ready-instructions-pr.md).
-It covers one completed audit, one public repository and immutable revision,
-exactly root `AGENTS.md` plus one selected companion file—root `CLAUDE.md` or
-`.github/copilot-instructions.md`—one ready-to-merge pull request, and one
-revision round. WrightOps uses only committed public documentation and
-workflows and does not execute target repository code. Its
+It covers one completed audit or
+[no-login repository preflight](https://zachwright.xyz/#preflight), one public
+repository and immutable revision, exactly root `AGENTS.md` plus one selected
+companion file—root `CLAUDE.md` or `.github/copilot-instructions.md`—one
+ready-to-merge pull request, and one revision round. WrightOps manually
+revalidates the public repository and immutable revision before confirming
+scope, uses only committed public documentation and workflows, and does not
+execute target repository code. Its
 [public request](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=instructions-pr-request.yml)
 records the public inputs and authorization; written scope confirmation comes
 before the dedicated PayPal Goods & Services checkout is shared privately.

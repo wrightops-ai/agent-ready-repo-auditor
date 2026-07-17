@@ -1,12 +1,12 @@
 # Founding Agent-Ready Instructions PR
 
-Turn one completed public audit into a bounded coding-agent instructions pull
-request.
+Turn one completed public audit or no-login repository preflight into a bounded
+coding-agent instructions pull request.
 
 ## Fixed scope
 
 For **$249 USD**, WrightOps prepares one ready-to-merge pull request for one
-public GitHub repository at one immutable audited revision. The pull request
+public GitHub repository at one immutable revalidated revision. The pull request
 adds or updates exactly these two repository paths:
 
 1. root `AGENTS.md`; and
@@ -32,12 +32,20 @@ pull request will be merged.
 
 ## Evidence and preparation boundary
 
-The completed
-[free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml)
-is required before scope confirmation. WrightOps prepares the two files only
-from the audited snapshot and committed public repository material, including
-public README, contribution, architecture, workflow, and verification
-documentation.
+One of these evidence routes is required before scope confirmation:
+
+- a completed
+  [free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml);
+  or
+- the complete evidence copied from the
+  [WrightOps no-login repository preflight](https://zachwright.xyz/#preflight).
+
+The no-login preflight is a quick screening result, not a full audit. Whichever
+route the requester uses, WrightOps manually revalidates the public repository
+and immutable revision before confirming scope. WrightOps prepares the two
+files only from that revalidated snapshot and committed public repository
+material, including public README, contribution, architecture, workflow, and
+verification documentation.
 
 WrightOps does not clone or execute repository code for this service. It does
 not run the target repository's build, tests, scripts, workflows, containers,
@@ -56,9 +64,10 @@ Submit the
 [public Instructions PR request](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=instructions-pr-request.yml)
 with:
 
-- the completed WrightOps audit issue URL;
+- either the completed WrightOps audit issue URL or the complete evidence
+  copied from the WrightOps no-login repository preflight;
 - the same public repository URL;
-- the full 40-character audited default-branch revision;
+- the full 40-character evidenced default-branch revision;
 - the selected companion path: root `CLAUDE.md` or
   `.github/copilot-instructions.md`;
 - public, revision-pinned contribution, architecture, build, test, or workflow
@@ -92,7 +101,7 @@ private.
 
 The buyer may request one revision round within seven calendar days of initial
 delivery. The request must remain limited to the same two files, repository,
-audited revision, and public inputs. WrightOps may correct factual mistakes,
+revalidated revision, and public inputs. WrightOps may correct factual mistakes,
 clarify wording, or adjust documented priorities within that scope.
 
 A changed repository revision, additional file, new agent integration,

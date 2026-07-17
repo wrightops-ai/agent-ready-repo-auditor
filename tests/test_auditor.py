@@ -643,7 +643,7 @@ class RepositoryWorkflowTests(unittest.TestCase):
         self.assertIn('title: "[Instructions PR request] "', template)
         self.assertIn("labels: [instructions-pr-request]", template)
         for field in (
-            "audit_issue",
+            "audit_evidence",
             "repository",
             "revision",
             "companion_path",
@@ -653,6 +653,11 @@ class RepositoryWorkflowTests(unittest.TestCase):
             "scope",
         ):
             self.assertIn(f"id: {field}", template)
+        self.assertNotIn("id: audit_issue", template)
+        self.assertIn("https://zachwright.xyz/#preflight", template)
+        self.assertIn("automated-audit issue URL or paste the evidence", template)
+        self.assertIn("manually revalidates", template)
+        self.assertIn("quick screening result, not a full audit", template)
         self.assertIn("root `AGENTS.md`", template)
         self.assertIn("root `CLAUDE.md`", template)
         self.assertIn("`.github/copilot-instructions.md`", template)
@@ -724,6 +729,9 @@ class RepositoryAssetTests(unittest.TestCase):
         self.assertIn("one ready-to-merge pull request", normalized_offer)
         self.assertIn("one revision round", normalized_offer)
         self.assertIn("one business day", normalized_offer)
+        self.assertIn("https://zachwright.xyz/#preflight", offer)
+        self.assertIn("manually revalidates", normalized_offer)
+        self.assertIn("quick screening result, not a full audit", normalized_offer)
         self.assertIn("does not clone or execute repository code", normalized_offer)
         for exclusion in (
             "private repositories",

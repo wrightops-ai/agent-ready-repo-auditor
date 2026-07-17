@@ -6,32 +6,35 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form only after the free automated audit has completed.
+        Use this form only after either the free automated audit or the [WrightOps no-login repository preflight](https://zachwright.xyz/#preflight) has completed.
 
-        WrightOps will verify the public inputs and confirm in writing whether the request fits the founding fixed scope. Opening this issue does not create a contract or payment obligation.
+        WrightOps will manually revalidate the public repository and immutable revision, then confirm in writing whether the request fits the founding fixed scope. The no-login preflight is a quick screening result, not a full audit. Opening this issue does not create a contract or payment obligation.
 
         The delivered pull request changes exactly two paths: root `AGENTS.md` and one companion file selected below—either root `CLAUDE.md` or `.github/copilot-instructions.md`. Everything submitted here is public. Do not include credentials, private repository information, customer data, personal data, or payment details.
-  - type: input
-    id: audit_issue
+  - type: textarea
+    id: audit_evidence
     attributes:
-      label: Completed public audit issue
-      description: Enter the URL of the completed WrightOps automated-audit issue.
-      placeholder: https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/123
+      label: Completed audit evidence
+      description: Enter the completed WrightOps automated-audit issue URL or paste the evidence copied from the WrightOps no-login repository preflight. WrightOps manually revalidates the public repository and immutable revision before confirming scope.
+      placeholder: |
+        https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/123
+
+        Or paste the complete evidence copied from https://zachwright.xyz/#preflight
     validations:
       required: true
   - type: input
     id: repository
     attributes:
       label: Public repository
-      description: Enter the same canonical public GitHub repository URL used in the audit.
+      description: Enter the same canonical public GitHub repository URL used in the audit or no-login preflight.
       placeholder: https://github.com/owner/repository
     validations:
       required: true
   - type: input
     id: revision
     attributes:
-      label: Audited immutable revision
-      description: Enter the full 40-character default-branch commit SHA named in the completed audit.
+      label: Immutable revision
+      description: Enter the full 40-character default-branch commit SHA named in the completed audit or no-login preflight evidence.
       placeholder: 0123456789abcdef0123456789abcdef01234567
     validations:
       required: true
@@ -75,7 +78,7 @@ body:
     attributes:
       label: Founding fixed-scope acknowledgement
       options:
-        - label: I understand the $249 offer covers one public repository at one audited revision and exactly two repository paths—root `AGENTS.md` plus the one companion path selected above.
+        - label: I understand the $249 offer covers one public repository at one evidenced and revalidated revision and exactly two repository paths—root `AGENTS.md` plus the one companion path selected above.
           required: true
         - label: I understand delivery is one ready-to-merge pull request, one revision round, and no guarantee that the repository owner will approve or merge it.
           required: true
