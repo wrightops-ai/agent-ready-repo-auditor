@@ -1,0 +1,63 @@
+name: $750 Agent-Ready Repository Audit
+description: Request written scope for one human-reviewed public-repository audit.
+title: "[Human audit request] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This public form requests a scope decision; it does not create a contract or payment obligation. WrightOps manually checks requester authority, public-input fit, exclusions, timing, and acceptance criteria before sharing any PayPal Goods & Services checkout.
+
+        Everything submitted here is public. Do not include credentials, private repository information, customer data, personal data, contact details, or payment information.
+  - type: input
+    id: repository
+    attributes:
+      label: Public repository
+      description: Enter one canonical public GitHub repository URL.
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+  - type: textarea
+    id: workflow_pain
+    attributes:
+      label: Coding-agent workflow or operational pain
+      description: Name the Codex, Claude Code, GitHub Copilot coding agent, Cursor, or mixed-agent workflow and the single setup, instruction, verification, or contribution problem to prioritize.
+    validations:
+      required: true
+  - type: dropdown
+    id: handoff
+    attributes:
+      label: Preferred handoff
+      description: Scheduling or contact details are handled privately by the accountable owner only after scope confirmation.
+      options:
+        - Recorded walkthrough
+        - Live 30-minute handoff
+    validations:
+      required: true
+  - type: checkboxes
+    id: authorization
+    attributes:
+      label: Authority and public-input acknowledgement
+      options:
+        - label: I am authorized to request a public-evidence review of this repository.
+          required: true
+        - label: I confirm that the repository and every input submitted here are public and contain no credentials, private repository information, customer data, personal data, contact details, or payment information.
+          required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Fixed-scope acknowledgement
+      options:
+        - label: I understand the $750 scope covers one public repository at one immutable default-branch revision, evidence-linked Markdown and JSON, a human-reviewed summary with up to five priorities, and one 30-minute handoff.
+          required: true
+        - label: I understand delivery is due within three business days only after WrightOps confirms scope, all required public inputs are complete, and PayPal Business reports a settled payment.
+          required: true
+        - label: I understand this is not a vulnerability, security, privacy, legal, or compliance assessment; it does not execute repository code, access private systems, implement changes, or guarantee an outcome.
+          required: true
+        - label: I reviewed the published scope, acceptance criteria, exclusions, correction boundary, and refund policy before requesting a decision.
+          required: true
+        - label: I understand that WrightOps will share a PayPal Goods & Services checkout privately only after written scope confirmation and that payment information must never be posted to GitHub.
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        Read the [complete $750 audit terms](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/agent-ready-repository-audit.md). WrightOps will respond only with a scope decision or a bounded correction request. Do not pay or begin sharing nonpublic information because you opened this issue.
