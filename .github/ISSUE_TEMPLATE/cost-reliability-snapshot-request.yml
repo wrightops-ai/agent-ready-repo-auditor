@@ -1,0 +1,70 @@
+name: $495 AI Agent Cost & Reliability Snapshot
+description: Request written scope for one prompt-free, pseudonymous workflow snapshot.
+title: "[Cost and reliability scope] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This public form requests a scope decision; it does not create a contract or payment obligation. WrightOps checks fit, evidence readiness, exclusions, timing, and acceptance criteria before arranging any private data transfer or PayPal Goods & Services payment.
+
+        Everything submitted here is public. Do not attach run records or include prompts, responses, tool arguments, credentials, customer data, personal data, production details, contact details, or payment information.
+  - type: input
+    id: workflow
+    attributes:
+      label: Pseudonymous workflow label
+      description: Use a non-identifying label such as workflow-a. Do not name a customer, employee, internal project, or production system.
+      placeholder: workflow-a
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Primary decision
+      description: Choose the one decision the reviewed scorecard should prioritize.
+      options:
+        - Cost coverage and cost per completed task
+        - Completion and first-pass reliability
+        - Retry rate and retry recovery
+        - Latency coverage and percentiles
+        - Evidence gaps before measurement
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence_readiness
+    attributes:
+      label: Normalized evidence readiness
+      description: Run records are never posted to this public issue. Private transfer is arranged only after written scope confirmation.
+      options:
+        - Ready in the exact prompt-free JSONL contract
+        - Ready in the exact prompt-free CSV contract
+        - Needs normalization before this fixed scope can begin
+    validations:
+      required: true
+  - type: checkboxes
+    id: authority
+    attributes:
+      label: Authority and data acknowledgement
+      options:
+        - label: I am authorized to commission an aggregate review of the workflow evidence.
+          required: true
+        - label: I will supply only pseudonymous normalized records and will not supply prompts, responses, tool arguments, credentials, direct identifiers, customer data, or production access.
+          required: true
+        - label: I understand that no run records or private transfer details belong in this public issue.
+          required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Fixed-scope acknowledgement
+      options:
+        - label: I understand the $495 scope covers one workflow, up to 20 pseudonymous task IDs and 50 normalized attempts, aggregate deterministic JSON and Markdown, up to five human-reviewed priorities, one 30-minute readout, and one factual correction round.
+          required: true
+        - label: I understand delivery is due within three business days only after WrightOps confirms scope, privately receives complete accepted inputs, and PayPal Business reports a settled payment.
+          required: true
+        - label: I understand this is an observational summary, not causal attribution, billing reconciliation, implementation, a security/privacy/legal/compliance/accounting audit, or a savings, reliability, revenue, or profit guarantee.
+          required: true
+        - label: I reviewed the complete scope, acceptance criteria, exclusions, correction boundary, and refund policy before requesting a decision.
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        Read the [complete $495 Snapshot terms](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/ai-agent-cost-reliability-snapshot.md) and [prompt-free normalized run contract](https://github.com/wrightops-ai/agent-ready-repo-auditor/blob/main/docs/ai-agent-cost-reliability-run-contract.md). WrightOps will respond only with a scope decision or a bounded correction request. Do not pay, post run data, or share nonpublic information because you opened this issue.
