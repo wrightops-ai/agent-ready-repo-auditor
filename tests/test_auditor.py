@@ -748,6 +748,21 @@ class RepositoryAssetTests(unittest.TestCase):
         self.assertIn("GitHub sign-in is required only", first_screen)
         self.assertIn("docs/sample-report-v1.md", first_screen)
 
+    def test_readme_routes_instruction_file_research_through_the_public_guide(self) -> None:
+        readme = Path("README.md").read_text(encoding="utf-8")
+
+        self.assertIn(
+            "https://zachwright.xyz/agents-md-vs-claude-md/",
+            readme,
+        )
+        self.assertIn(
+            "https://zachwright.xyz/agent-ready-instructions-pr/",
+            readme,
+        )
+        self.assertIn("educational and requires no login", readme)
+        self.assertIn("not a customer request", readme)
+        self.assertIn("not a security or compliance assessment", readme)
+
     def test_sample_report_is_pinned_to_the_v1_commit(self) -> None:
         sample = Path("docs/sample-report-v1.md").read_text(encoding="utf-8")
 

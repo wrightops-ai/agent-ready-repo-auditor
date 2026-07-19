@@ -55,6 +55,12 @@ without posting contact or payment information. Opening the issue is not a
 contract or payment obligation; WrightOps confirms scope before privately
 sharing a PayPal Goods & Services checkout, and work starts only after provider-confirmed settlement.
 
+Choosing which instruction file should own which rules? Read the no-login
+[AGENTS.md vs CLAUDE.md vs Copilot Instructions field
+guide](https://zachwright.xyz/agents-md-vs-claude-md/). It is educational and requires no login;
+reading it is not a customer request, contract, or payment obligation, and the
+guide is not a security or compliance assessment.
+
 Need the two instruction files proposed as an actual contribution? The
 [$249 Founding Agent-Ready Instructions PR](docs/agent-ready-instructions-pr.md)
 adds or updates exactly root `AGENTS.md` plus one selected companion file—root
