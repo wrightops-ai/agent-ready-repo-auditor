@@ -212,6 +212,48 @@ class AuditTests(unittest.TestCase):
         self.assertIn("If runtime configuration is required", next_steps)
         self.assertIn("otherwise state explicitly", next_steps)
 
+    def test_partial_templates_and_verification_use_precise_evidence(self) -> None:
+        fixture = GitHubFixture(
+            {
+                ".github/ISSUE_TEMPLATE/config.yml": "blank_issues_enabled: false\n",
+                ".github/ISSUE_TEMPLATE/bug.yml": "name: Bug\n",
+                "AGENTS.md": (
+                    "# Instructions\n"
+                    "The tests directory contains fixtures.\n"
+                    "## Verification\n"
+                    "Run `npm test` before submitting.\n"
+                ),
+                "package.json": '{"scripts":{"test":"node --test"}}\n',
+            }
+        )
+
+        payload = audit_repository(
+            "acme/demo", client=GitHubClient(transport=fixture)
+        ).to_dict()
+        templates = next(
+            check for check in payload["checks"] if check["id"] == "contribution_templates"
+        )
+        verification = next(
+            check for check in payload["checks"] if check["id"] == "verification"
+        )
+
+        self.assertEqual([item["path"] for item in templates["evidence"]], [
+            ".github/ISSUE_TEMPLATE/bug.yml"
+        ])
+        self.assertIn(
+            "Add a pull-request template",
+            " ".join(payload["next_steps"]),
+        )
+        self.assertNotIn(
+            "Add both issue and pull-request templates",
+            " ".join(payload["next_steps"]),
+        )
+        content_evidence = [
+            item for item in verification["evidence"] if item["kind"] == "content"
+        ]
+        self.assertEqual(content_evidence[0]["path"], "AGENTS.md")
+        self.assertEqual(content_evidence[0]["line"], 4)
+
     def test_private_and_truncated_repositories_fail_closed(self) -> None:
         with self.assertRaises(PrivateRepositoryError):
             audit_repository(

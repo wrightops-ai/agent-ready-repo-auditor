@@ -67,7 +67,14 @@ SETUP_RE = re.compile(
 COMMAND_RE = re.compile(
     r"(?i)(?:^|[\s`])(?:python(?:3)?|pytest|npm|pnpm|yarn|bun|make|just|cargo|go|mvn|gradle|dotnet)\s+[^\s`]"
 )
-VERIFY_RE = re.compile(r"(?i)\b(test|tests|testing|lint|typecheck|type-check|verify|verification|check)\b")
+VERIFY_COMMAND_RE = re.compile(
+    r"(?ix)(?:"
+    r"\bpython(?:3)?\s+-m\s+(?:pytest|unittest)\b|"
+    r"\bpytest\b|"
+    r"\b(?:npm|pnpm|yarn|bun)\s+(?:run\s+)?(?:test|lint|typecheck|check|verify|build)\b|"
+    r"\b(?:make|just|cargo|go|mvn|gradle|dotnet)\s+(?:test|lint|typecheck|check|verify)\b"
+    r")"
+)
 RISK_ACTION = (
     r"deploy|publish|delete|force[- ]push|spend|pay|contact|send|expose|record|download|"
     r"use credentials?|access production|handle (?:personal|private) data"
@@ -114,7 +121,7 @@ def audit_repository(
         _verification_check(snapshot, paths, text_files),
         _risky_action_check(snapshot, text_files),
     )
-    next_steps = tuple(_next_step(check.check_id) for check in checks if check.score < check.max_score)
+    next_steps = tuple(_next_step(check) for check in checks if check.score < check.max_score)
     repository_record: dict[str, Any] = {
         "api_url": snapshot.api_url,
         "archived": snapshot.archived,
@@ -266,7 +273,13 @@ def _ci_check(snapshot: RepositorySnapshot, paths: tuple[str, ...]) -> CheckResu
 
 def _templates_check(snapshot: RepositorySnapshot, paths: tuple[str, ...]) -> CheckResult:
     issue_paths = sorted(
-        (path for path in paths if path.lower().startswith(".github/issue_template/") and not path.endswith("/")),
+        (
+            path
+            for path in paths
+            if path.lower().startswith(".github/issue_template/")
+            and not path.endswith("/")
+            and path.rsplit("/", 1)[-1].lower() not in {"config.yml", "config.yaml"}
+        ),
         key=str.lower,
     )
     pr_paths = sorted(
@@ -308,7 +321,7 @@ def _verification_check(
     for item in text_files.values():
         if item.text is None:
             continue
-        line = _first_line(item.text, VERIFY_RE)
+        line = _first_line(item.text, VERIFY_COMMAND_RE)
         if line:
             content_evidence.append(_line_evidence(item, line, "Verification-oriented guidance or configuration was found."))
     evidence = [
@@ -372,7 +385,18 @@ def _first_line(text: str, pattern: re.Pattern[str]) -> int | None:
     return None
 
 
-def _next_step(check_id: str) -> str:
+def _next_step(check: CheckResult) -> str:
+    if check.check_id == "contribution_templates":
+        has_issue_template = any(
+            item.detail == "Issue template exists." for item in check.evidence
+        )
+        has_pull_request_template = any(
+            item.detail == "Pull-request template exists." for item in check.evidence
+        )
+        if has_issue_template and not has_pull_request_template:
+            return "Add a pull-request template for structured change reviews."
+        if has_pull_request_template and not has_issue_template:
+            return "Add an issue template for structured change requests."
     return {
         "readme_setup": "Add or strengthen a root README with prerequisites and copy-paste setup commands.",
         "agent_instructions": "Add a root AGENTS.md (or another recognized instruction file) with repository-specific coding-agent guidance.",
@@ -381,4 +405,4 @@ def _next_step(check_id: str) -> str:
         "contribution_templates": "Add both issue and pull-request templates for structured change requests and reviews.",
         "verification": "Document and automate repeatable test, lint, or type-check commands.",
         "risky_action_boundaries": "Document actions that require explicit approval, including destructive, deployment, credential, publishing, or payment operations.",
-    }[check_id]
+    }[check.check_id]
