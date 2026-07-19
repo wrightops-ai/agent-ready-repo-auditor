@@ -688,8 +688,22 @@ class RepositoryAssetTests(unittest.TestCase):
         for agent in ("Codex", "Claude Code", "GitHub Copilot coding agent", "Cursor"):
             self.assertIn(agent, first_screen)
         self.assertIn("Request a free automated audit", first_screen)
-        self.assertIn("template=fix-plan-request.yml", first_screen)
-        self.assertIn("template=instructions-pr-request.yml", first_screen)
+        self.assertIn("https://zachwright.xyz/agent-ready-repository-audit/", first_screen)
+        self.assertIn("https://zachwright.xyz/agent-ready-instructions-pr/", first_screen)
+        self.assertIn("https://zachwright.xyz/agent-ready-fix-plan/", first_screen)
+        self.assertIn(
+            "https://zachwright.xyz/ai-agent-cost-reliability-snapshot/",
+            first_screen,
+        )
+        for paid_form in (
+            "template=human-audit-scope-request.yml",
+            "template=cost-reliability-snapshot-request.yml",
+            "template=fix-plan-request.yml",
+            "template=instructions-pr-request.yml",
+        ):
+            self.assertNotIn(paid_form, first_screen)
+        self.assertIn("paid-offer pages are public and require no login", first_screen)
+        self.assertIn("GitHub sign-in is required only", first_screen)
         self.assertIn("docs/sample-report-v1.md", first_screen)
 
     def test_sample_report_is_pinned_to_the_v1_commit(self) -> None:

@@ -9,7 +9,9 @@
 
 Agent-Ready Repo Auditor is a dependency-free Python CLI, library, and GitHub Action for repositories used with **Codex, Claude Code, GitHub Copilot coding agent, Cursor, or mixed-agent workflows**. It reads one immutable public default-branch snapshot and emits deterministic JSON or Markdown with source links for every positive finding.
 
-[Explore the WrightOps offer site](https://zachwright.xyz/) · [Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Scope the $750 human-reviewed audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=human-audit-scope-request.yml) · [Scope the $495 AI Agent Cost & Reliability Snapshot](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=cost-reliability-snapshot-request.yml) · [Review the $495 terms](docs/ai-agent-cost-reliability-snapshot.md) · [Request a $149 human-reviewed Fix Plan](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=fix-plan-request.yml) · [Request the $249 Founding Instructions PR](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=instructions-pr-request.yml) · [Inspect the real two-file sample PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1) · [See the immutable audit report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
+[Request a free automated audit](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=audit-request.yml) · [Review the $750 human-reviewed audit](https://zachwright.xyz/agent-ready-repository-audit/) · [Review the $249 Instructions PR](https://zachwright.xyz/agent-ready-instructions-pr/) · [Review the $149 Fix Plan](https://zachwright.xyz/agent-ready-fix-plan/) · [Review the $495 AI Agent Cost & Reliability Snapshot](https://zachwright.xyz/ai-agent-cost-reliability-snapshot/) · [Inspect the real two-file sample PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1) · [See the immutable audit report](docs/sample-report-v1.md) · [Install the GitHub Action](#github-action)
+
+The four paid-offer pages are public and require no login. GitHub sign-in is required only when opening a public request.
 
 It never clones or executes repository code. It is not a vulnerability scanner, security assessment, compliance review, or proof that documentation is accurate.
 
@@ -66,6 +68,13 @@ revision can be credited toward the $249 total. [Inspect the merged sample
 PR](https://github.com/wrightops-ai/bounty-red-flag-card/pull/1) to see the
 Copilot companion variant, exact two-file boundary, evidence notes, hosted
 checks, and public review surface.
+
+Need aggregate cost, reliability, latency, and retry evidence instead? Review
+the [$495 AI Agent Cost & Reliability Snapshot](https://zachwright.xyz/ai-agent-cost-reliability-snapshot/)
+and its [public terms](docs/ai-agent-cost-reliability-snapshot.md), then use the
+[structured public scope request](https://github.com/wrightops-ai/agent-ready-repo-auditor/issues/new?template=cost-reliability-snapshot-request.yml)
+only after confirming the prompt-free input boundary. The request is non-binding;
+WrightOps confirms scope before sharing any checkout.
 
 For a concrete example, read the [sample report for the immutable `v1` release](docs/sample-report-v1.md), generated from public evidence at revision `7a507bc0cb42f8c04fb18e53a46371b37b5bd56f`.
 
