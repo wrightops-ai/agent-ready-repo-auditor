@@ -671,6 +671,15 @@ class RepositoryWorkflowTests(unittest.TestCase):
 
 
 class RepositoryAssetTests(unittest.TestCase):
+    def test_free_audit_issue_form_quotes_boolean_like_options(self) -> None:
+        template = Path(
+            ".github/ISSUE_TEMPLATE/audit-request.yml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn('- "Yes"', template)
+        self.assertIn('- "No"', template)
+        self.assertNotRegex(template, r"(?m)^\s*-\s+(?:Yes|No)\s*$")
+
     def test_readme_first_screen_names_agents_and_leads_to_free_audit(self) -> None:
         readme = Path("README.md").read_text(encoding="utf-8")
         first_screen = "\n".join(readme.splitlines()[:20])

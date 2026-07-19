@@ -44,9 +44,9 @@ body:
       label: Fixed-price remediation interest
       description: If this audit finds gaps, would you consider a $149 human-reviewed Fix Plan with exactly three public fix cards? This is non-binding research, not an offer or contract.
       options:
-        - Yes
+        - "Yes"
         - Maybe
-        - No
+        - "No"
     validations:
       required: true
   - type: checkboxes
